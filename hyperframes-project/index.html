@@ -6,30 +6,85 @@
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
-      html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: #fff; }
-      #root { position: relative; width: 1080px; height: 1920px; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
-      .vid { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; object-fit: cover; }
-      /* logo badge over the clips */
-      #badge { position: absolute; left: 48px; top: 64px; width: 330px; height: 112px; background: #fff; border-radius: 22px;
-        box-shadow: 0 8px 28px rgba(0,0,0,.28); display: flex; align-items: center; justify-content: center; z-index: 5; }
-      #badge img { width: 290px; height: auto; }
-      /* progress bar */
-      #bar { position: absolute; left: 0; bottom: 0; height: 14px; width: 1080px; z-index: 5;
-        background: linear-gradient(90deg, #67B428, #077FC3); transform-origin: left center; }
-      /* end screen */
-      #end { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #fff; z-index: 10; opacity: 0; }
+      html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+      .vid { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; object-fit: cover; transform-origin: 50% 35%; }
+      .abs { position: absolute; }
+      /* fx layers */
+      #vig { left: 0; top: 0; width: 1080px; height: 1920px; z-index: 4; opacity: 0;
+        background: radial-gradient(ellipse at center, rgba(0,0,0,0) 52%, rgba(225,25,25,.7) 100%); }
+      #warm { left: 0; top: 0; width: 1080px; height: 1920px; z-index: 3; opacity: 0; background: rgba(255,150,40,.16); }
+      #clock { left: 880px; top: 56px; width: 130px; height: 130px; z-index: 6; opacity: 0; filter: drop-shadow(0 4px 14px rgba(0,0,0,.6)); }
+      /* TV frame */
+      #tv { left: 70px; top: 200px; width: 940px; height: 1150px; z-index: 5; border-radius: 48px; opacity: 0;
+        box-shadow: 0 0 0 2400px #0b0b0b; border: 6px solid #2a2a2a;
+        background: repeating-linear-gradient(0deg, rgba(0,0,0,.20) 0 3px, rgba(0,0,0,0) 3px 7px); }
+      #tick { left: 70px; top: 1262px; width: 940px; height: 88px; z-index: 6; opacity: 0; display: flex; border-radius: 0 0 44px 44px; overflow: hidden; }
+      #tick .a { background: #d7191f; color: #fff; font-weight: 800; font-size: 38px; letter-spacing: .06em; padding: 0 26px; display: flex; align-items: center; }
+      #tick .b { background: rgba(10,10,10,.88); color: #fff; font-weight: 700; font-size: 32px; padding: 0 24px; display: flex; align-items: center; flex: 1; }
+      #static { left: 0; top: 0; width: 1080px; height: 1920px; z-index: 7; opacity: 0; mix-blend-mode: screen;
+        background: repeating-linear-gradient(0deg, rgba(255,255,255,.55) 0 2px, rgba(0,0,0,.6) 2px 5px), repeating-linear-gradient(90deg, rgba(255,255,255,.3) 0 3px, rgba(0,0,0,.5) 3px 9px); }
+      /* logo pill */
+      #badge { left: 40px; top: 56px; width: 300px; height: 96px; border-radius: 48px; z-index: 20;
+        background: rgba(255,255,255,.82); box-shadow: 0 6px 24px rgba(0,0,0,.25); display: flex; align-items: center; justify-content: center; }
+      #badge img { width: 238px; height: auto; }
+      #bar { left: 0; bottom: 0; height: 14px; width: 1080px; z-index: 20; background: linear-gradient(90deg, #67B428, #077FC3); transform-origin: left center; }
+      /* captions */
+      .cap { position: absolute; left: 40px; width: 1000px; top: 1440px; text-align: center; font-size: 70px; font-weight: 800; line-height: 1.1;
+        color: #fff; text-shadow: 0 4px 16px rgba(0,0,0,.85), 0 0 3px rgba(0,0,0,.9); opacity: 0; z-index: 15; letter-spacing: -.01em; }
+      .cap b { color: #7fd13b; font-weight: 800; }
+      /* lower third */
+      #lt { left: 40px; top: 1120px; width: 760px; height: 170px; z-index: 12; opacity: 0; border-radius: 22px; overflow: hidden;
+        background: rgba(12,32,52,.88); box-shadow: 0 10px 30px rgba(0,0,0,.4); }
+      #lt .strip { position: absolute; left: 0; top: 0; width: 16px; height: 170px; background: linear-gradient(180deg, #67B428, #077FC3); }
+      #lt .n { position: absolute; left: 48px; top: 26px; font-size: 62px; font-weight: 800; color: #fff; letter-spacing: -.01em; }
+      #lt .s { position: absolute; left: 48px; top: 106px; font-size: 27px; font-weight: 700; color: #8fd5ff; letter-spacing: .08em; }
+      /* chart card */
+      #chart { left: 28px; top: 330px; width: 530px; height: 720px; z-index: 11; opacity: 0; background: #fff; border-radius: 40px;
+        box-shadow: 0 14px 40px rgba(0,0,0,.4); overflow: hidden; }
+      #chart .row { position: absolute; left: 0; width: 530px; height: 340px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+      #chart .r1 { top: 0; background: #eaf6dc; } #chart .r2 { top: 380px; background: #e4f1fb; }
+      #chart .div { position: absolute; left: 0; top: 340px; width: 530px; height: 40px; background: linear-gradient(90deg,#67B428,#077FC3); }
+      #chart .t { font-size: 50px; font-weight: 800; line-height: 1.05; margin-top: 14px; }
+      #chart .r1 .t { color: #3f7d12; } #chart .r2 .t { color: #055f94; }
+      #chart svg { width: 120px; height: 120px; }
+      /* calendar ribbon */
+      #cal { left: 50px; top: 1090px; width: 980px; height: 230px; z-index: 12; opacity: 0; }
+      #cal .lab { position: absolute; left: 330px; top: 0; width: 320px; height: 62px; border-radius: 31px; background: linear-gradient(90deg,#67B428,#077FC3);
+        color: #fff; font-size: 34px; font-weight: 800; letter-spacing: .12em; display: flex; align-items: center; justify-content: center; }
+      #cal .trk { position: absolute; left: 150px; top: 124px; width: 680px; height: 18px; border-radius: 9px; background: rgba(255,255,255,.35); }
+      #cal .fill { position: absolute; left: 150px; top: 124px; width: 680px; height: 18px; border-radius: 9px; background: linear-gradient(90deg,#67B428,#077FC3); transform-origin: left center; }
+      #cal .d { position: absolute; top: 82px; width: 190px; height: 102px; border-radius: 22px; background: #fff; color: #0c2034; display: flex; flex-direction: column;
+        align-items: center; justify-content: center; font-weight: 800; font-size: 46px; box-shadow: 0 8px 24px rgba(0,0,0,.35); }
+      #cal .d small { font-size: 20px; font-weight: 700; color: #067bc2; letter-spacing: .1em; }
+      #cal .d1 { left: 0; } #cal .d2 { left: 790px; }
+      /* pop cards */
+      .pc { left: 24px; width: 560px; height: 170px; z-index: 12; opacity: 0; border-radius: 30px; background: rgba(12,32,52,.72);
+        border: 2px solid rgba(255,255,255,.55); box-shadow: 0 12px 34px rgba(0,0,0,.4); overflow: hidden; }
+      .pc .num { position: absolute; left: 18px; top: 40px; width: 90px; height: 90px; border-radius: 45px; background: linear-gradient(135deg,#67B428,#077FC3);
+        color: #fff; font-size: 52px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+      .pc .h { position: absolute; left: 124px; top: 34px; font-size: 38px; white-space: nowrap; font-weight: 800; color: #fff; }
+      .pc .s { position: absolute; left: 140px; top: 106px; font-size: 22px; white-space: nowrap; font-weight: 700; color: #9fd9ff; letter-spacing: .04em; }
+      #pc1 { top: 360px; } #pc2 { top: 560px; } #pc2 .s { display: none; } #pc2 .h { top: 60px; }
+      /* stamp */
+      #stamp { left: 130px; top: 900px; width: 820px; height: 170px; z-index: 13; opacity: 0; border: 10px solid #67B428; border-radius: 28px;
+        background: rgba(255,255,255,.94); color: #077FC3; font-size: 70px; white-space: nowrap; font-weight: 900; letter-spacing: .02em; display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 14px 40px rgba(0,0,0,.45); }
+      #stamp span { color: #67B428; margin-left: 18px; }
+      /* outro */
+      #end { left: 0; top: 0; width: 1080px; height: 1920px; background: #fff; z-index: 30; opacity: 0; overflow: hidden; }
       #end .top { position: absolute; left: 0; top: 0; width: 1080px; height: 28px; background: linear-gradient(90deg, #67B428, #077FC3); }
       #end .bot { position: absolute; left: 0; bottom: 0; width: 1080px; height: 28px; background: linear-gradient(90deg, #077FC3, #67B428); }
-      #logo { position: absolute; left: 100px; top: 330px; width: 880px; height: auto; opacity: 0; }
-      #head { position: absolute; left: 60px; width: 960px; top: 800px; text-align: center; font-size: 104px; font-weight: 800;
-        line-height: 1.12; letter-spacing: -0.02em; color: #077FC3; }
-      #head .w { display: inline-block; opacity: 0; margin: 0 14px; }
-      #head .g { color: #67B428; }
-      #rule { position: absolute; left: 340px; top: 1250px; width: 400px; height: 10px; border-radius: 5px;
-        background: linear-gradient(90deg, #67B428, #077FC3); transform-origin: left center; }
-      #arrow { position: absolute; left: 490px; top: 1330px; width: 100px; height: 100px; opacity: 0; }
-      #tag { position: absolute; left: 0; width: 1080px; top: 1560px; text-align: center; font-size: 40px; font-weight: 600;
-        letter-spacing: .28em; color: #323232; opacity: 0; }
+      #pip { position: absolute; left: 340px; top: 150px; width: 400px; height: 400px; border-radius: 200px; padding: 10px; background: linear-gradient(135deg,#67B428,#077FC3); opacity: 0; }
+      #pip img { width: 380px; height: 380px; border-radius: 190px; object-fit: cover; object-position: 50% 22%; display: block; }
+      #logo { position: absolute; left: 190px; top: 640px; width: 700px; height: auto; opacity: 0; }
+      #btn { position: absolute; left: 90px; top: 1060px; width: 900px; height: 170px; border-radius: 85px; opacity: 0;
+        background: linear-gradient(90deg,#67B428,#077FC3); box-shadow: 0 16px 40px rgba(7,127,195,.4); color: #fff; font-size: 66px; font-weight: 900;
+        letter-spacing: .02em; display: flex; align-items: center; justify-content: center; }
+      #sub { position: absolute; left: 0; width: 1080px; top: 1290px; text-align: center; font-size: 70px; font-weight: 800; color: #077FC3; opacity: 0; }
+      #sub b { color: #67B428; }
+      #arrow { position: absolute; left: 490px; top: 1450px; width: 100px; height: 100px; opacity: 0; }
+      #tag { position: absolute; left: 0; width: 1080px; top: 1680px; text-align: center; font-size: 38px; font-weight: 600; letter-spacing: .28em; color: #323232; opacity: 0; }
     </style>
   </head>
   <body>
@@ -40,17 +95,90 @@
       <video id="v4" class="vid clip" src="media/c4.mp4" data-start="30" data-duration="10" data-track-index="0" data-has-audio="true" playsinline></video>
       <video id="v5" class="vid clip" src="media/c5.mp4" data-start="40" data-duration="10" data-track-index="0" data-has-audio="true" playsinline></video>
 
-      <div id="badge" class="clip" data-start="0" data-duration="50" data-track-index="1"><img src="media/logo.jpg" alt="Allen & Associates" /></div>
-      <div id="bar" class="clip" data-start="0" data-duration="50" data-track-index="2"></div>
+      <audio id="sfx" src="media/sfx.wav" data-start="0" data-duration="55" data-track-index="8" data-volume="0.55"></audio>
+      <audio id="vo" src="media/vo.wav" data-start="50.3" data-duration="2.6" data-track-index="9" data-volume="1"></audio>
 
-      <div id="end" class="clip" data-start="50" data-duration="5" data-track-index="3">
+      <div id="warm" class="abs"></div>
+      <div id="vig" class="abs"></div>
+      <svg id="clock" class="abs" viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="rgba(0,0,0,.45)" stroke="#ff4040" stroke-width="7"/>
+        <path d="M50 14v8M50 78v8M14 50h8M78 50h8" stroke="#fff" stroke-width="5" stroke-linecap="round"/>
+        <line id="hand" x1="50" y1="50" x2="50" y2="24" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+        <line id="hand2" x1="50" y1="50" x2="66" y2="50" stroke="#ff4040" stroke-width="6" stroke-linecap="round"/><circle cx="50" cy="50" r="5" fill="#fff"/></svg>
+
+      <div id="tv" class="abs"></div>
+      <div id="tick" class="abs"><div class="a">BREAKING</div><div class="b">MEDICARE OPEN ENROLLMENT: EMERGENCY?</div></div>
+      <div id="static" class="abs"></div>
+
+      <div id="lt" class="abs"><div class="strip"></div><div class="n">Arric Allen</div><div class="s">30+ YEARS MEDICARE EXPERTISE · EST. 1994</div></div>
+
+      <div id="chart" class="abs">
+        <div class="row r1"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#67B428"/><path d="M28 52 L44 68 L74 34" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="t">MUST DO<br/>BY DEC 7</div></div>
+        <div class="div"></div>
+        <div class="row r2"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" fill="#077FC3"/><circle cx="50" cy="50" r="30" fill="none" stroke="#fff" stroke-width="7"/><path d="M50 32 V52 L63 60" fill="none" stroke="#fff" stroke-width="7" stroke-linecap="round"/></svg><div class="t">WHAT<br/>CAN WAIT</div></div>
+      </div>
+
+      <div id="cal" class="abs"><div class="lab">AEP WINDOW</div><div class="trk"></div><div class="fill" id="fill"></div>
+        <div class="d d1"><small>START</small>OCT 15</div><div class="d d2"><small>END</small>DEC 7</div></div>
+
+      <div id="pc1" class="pc abs"><div class="num">1</div><div class="h">Part D</div><div class="s">PRESCRIPTION DRUG PLANS</div></div>
+      <div id="pc2" class="pc abs"><div class="num">2</div><div class="h">Medicare Advantage</div><div class="s">PLANS</div></div>
+
+      <div id="stamp" class="abs">EFFECTIVE:<span>JAN 1</span></div>
+
+      <div class="cap" id="cap0">We need a new</div>
+      <div class="cap" id="cap1">plan,</div>
+      <div class="cap" id="cap2"><b>STAT!</b></div>
+      <div class="cap" id="cap3">The clock is <b>ticking!</b></div>
+      <div class="cap" id="cap4"><b>December</b> <b>7th,</b></div>
+      <div class="cap" id="cap5">every fall,</div>
+      <div class="cap" id="cap6">TV commercials make Medicare</div>
+      <div class="cap" id="cap7">open <b>enrollment</b> feel like</div>
+      <div class="cap" id="cap8">an emergency room drama.</div>
+      <div class="cap" id="cap9">The truth is a</div>
+      <div class="cap" id="cap10">lot less dramatic if</div>
+      <div class="cap" id="cap11">you know which rules</div>
+      <div class="cap" id="cap12">actually apply to you.</div>
+      <div class="cap" id="cap13">I'm Eric Allen with</div>
+      <div class="cap" id="cap14">Allen & Associates and</div>
+      <div class="cap" id="cap15">I've been helping people</div>
+      <div class="cap" id="cap16">navigate insurance since <b>1994.</b></div>
+      <div class="cap" id="cap17">Today,</div>
+      <div class="cap" id="cap18">we're separating the <b>hype</b></div>
+      <div class="cap" id="cap19">from the real <b>deadlines.</b></div>
+      <div class="cap" id="cap20">Let's pull up the</div>
+      <div class="cap" id="cap21">chart and look at</div>
+      <div class="cap" id="cap22">the facts,</div>
+      <div class="cap" id="cap23">what you must do</div>
+      <div class="cap" id="cap24">by <b>December</b> <b>7th</b> and</div>
+      <div class="cap" id="cap25">what can wait.</div>
+      <div class="cap" id="cap26">Before we go any</div>
+      <div class="cap" id="cap27">further,</div>
+      <div class="cap" id="cap28">let's define one key</div>
+      <div class="cap" id="cap29">rule.</div>
+      <div class="cap" id="cap30">Trust me,</div>
+      <div class="cap" id="cap31">this will save us</div>
+      <div class="cap" id="cap32">all some confusion later.</div>
+      <div class="cap" id="cap33"><b>October</b> <b>15th</b> through <b>December</b></div>
+      <div class="cap" id="cap34"><b>7th</b> is the annual</div>
+      <div class="cap" id="cap35"><b>enrollment</b> period.</div>
+      <div class="cap" id="cap36">This window only governs</div>
+      <div class="cap" id="cap37"><b>two</b> things,</div>
+      <div class="cap" id="cap38">standalone <b>Part</b> <b>D</b> prescription</div>
+      <div class="cap" id="cap39">drug plans and Medicare</div>
+      <div class="cap" id="cap40"><b>Advantage</b> plans.</div>
+      <div class="cap" id="cap41">Any change you make</div>
+      <div class="cap" id="cap42">here takes effect <b>January</b></div>
+      <div class="cap" id="cap43"><b>1st.</b></div>
+
+      <div id="badge" class="abs"><img src="media/logo.png" alt="Allen & Associates" /></div>
+      <div id="bar" class="abs"></div>
+
+      <div id="end" class="abs">
         <div class="top"></div><div class="bot"></div>
+        <div id="pip"><img src="media/last.png" alt="" /></div>
         <img id="logo" src="media/logo.jpg" alt="Allen & Associates Insurance Agency" />
-        <div id="head">
-          <span class="w">Click</span><span class="w">the</span><span class="w">link</span><span class="w">below</span>
-          <span class="w">for</span><span class="w">the</span><span class="w g">full</span><span class="w g">video</span>
-        </div>
-        <div id="rule"></div>
+        <div id="btn">CLICK THE LINK BELOW</div>
+        <div id="sub">for the <b>full video</b></div>
         <svg id="arrow" viewBox="0 0 100 100"><path d="M50 8 V74 M20 46 L50 78 L80 46" fill="none" stroke="#67B428" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <div id="tag">MAKING MEDICARE EASY</div>
       </div>
@@ -58,19 +186,140 @@
     <script>
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
-      // badge + progress over the clips
-      tl.fromTo("#badge", { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.3);
+
+      /* ---- always-on: logo pill + progress bar ---- */
+      tl.fromTo("#badge", { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: .6, ease: "power3.out" }, .3);
       tl.fromTo("#bar", { scaleX: 0 }, { scaleX: 1, duration: 50, ease: "none" }, 0);
-      tl.to("#badge", { opacity: 0, duration: 0.3 }, 49.7);
-      // end screen
-      tl.set("#end", { opacity: 1 }, 50);
-      tl.fromTo("#end", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power1.out" }, 49.8);
-      tl.fromTo("#logo", { opacity: 0, y: 40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: "power3.out" }, 50.3);
-      tl.fromTo("#head .w", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.45, ease: "back.out(1.6)", stagger: 0.12 }, 51.0);
-      tl.fromTo("#rule", { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: "power2.out" }, 52.3);
-      tl.to("#arrow", { opacity: 1, duration: 0.3 }, 52.6);
-      tl.fromTo("#arrow", { y: 0 }, { y: 24, duration: 0.5, ease: "sine.inOut", yoyo: true, repeat: 3 }, 52.6);
-      tl.to("#tag", { opacity: 1, duration: 0.6 }, 53.0);
+      tl.to("#badge", { opacity: 0, duration: .3 }, 49.7);
+
+      /* ---- 0:00-0:04 urgency: punch-in + shake, red pulse, clock ---- */
+      tl.set("#v1", { scale: 1.1 }, 0);
+      tl.to("#v1",{x:14,y:-10,duration:.06,ease:"none"},0.10);
+      tl.to("#v1",{x:-12,y:8,duration:.06,ease:"none"},0.35);
+      tl.to("#v1",{x:10,y:12,duration:.06,ease:"none"},0.60);
+      tl.to("#v1",{x:-9,y:-8,duration:.06,ease:"none"},0.85);
+      tl.to("#v1",{x:12,y:-6,duration:.06,ease:"none"},1.10);
+      tl.to("#v1",{x:-8,y:10,duration:.06,ease:"none"},1.35);
+      tl.to("#v1",{x:6,y:-12,duration:.06,ease:"none"},1.60);
+      tl.to("#v1",{x:-10,y:-4,duration:.06,ease:"none"},1.85);
+      tl.to("#v1", { x: 0, y: 0, scale: 1, duration: .6, ease: "power2.out" }, 2.3);
+      tl.set("#vig", { opacity: 0 }, 0);
+      tl.to("#vig", { opacity: 1, duration: .45, ease: "sine.inOut", yoyo: true, repeat: 7 }, .1);
+      tl.to("#vig", { opacity: 0, duration: .3 }, 3.7);
+      tl.fromTo("#clock", { opacity: 0, scale: .6 }, { opacity: 1, scale: 1, duration: .3, ease: "back.out(2)" }, .2);
+      tl.fromTo("#hand", { rotation: 0, svgOrigin: "50 50" }, { rotation: 1080, svgOrigin: "50 50", duration: 3.5, ease: "none" }, .2);
+      tl.to("#clock", { opacity: 0, duration: .25 }, 3.9);
+
+      /* ---- 0:04-0:10 breaking-news TV frame ---- */
+      tl.fromTo("#static", { opacity: 0 }, { opacity: .85, duration: .08, yoyo: true, repeat: 3 }, 3.95);
+      tl.set(["#tv", "#tick"], { opacity: 1 }, 4.1);
+      tl.fromTo("#tick", { x: -900 }, { x: 0, duration: .5, ease: "power3.out" }, 4.1);
+      tl.fromTo("#static", { opacity: 0 }, { opacity: .9, duration: .07, yoyo: true, repeat: 3 }, 9.65);
+      tl.to(["#tv", "#tick"], { opacity: 0, duration: .2 }, 9.85);
+
+      /* ---- 0:10-0:14 calm ease-out zoom + warm grade ---- */
+      tl.set("#v2", { scale: 1.08 }, 10);
+      tl.to("#v2", { scale: 1, duration: 4.2, ease: "power2.out" }, 10.2);
+      tl.to("#warm", { opacity: 1, duration: 1.2 }, 10.2);
+      tl.to("#warm", { opacity: 0, duration: 1 }, 19.0);
+
+      /* ---- 0:14-0:19 lower third ---- */
+      tl.set("#lt", { opacity: 1 }, 14.7);
+      tl.fromTo("#lt", { x: -820 }, { x: 0, duration: .6, ease: "power3.out" }, 14.7);
+      tl.to("#lt", { x: -820, duration: .5, ease: "power2.in" }, 19.2);
+      tl.set("#lt", { opacity: 0 }, 19.8);
+
+      /* ---- 0:23-0:29 clean chart card, speaker shifts right ---- */
+      tl.set("#v3", { scale: 1 }, 20);
+      tl.to("#v3", { scale: 1.12, x: 90, duration: .6, ease: "power2.out" }, 23.2);
+      tl.set("#chart", { opacity: 1 }, 23.4);
+      tl.fromTo("#chart", { x: -620 }, { x: 0, duration: .55, ease: "back.out(1.3)" }, 23.4);
+      tl.fromTo("#chart .r1", { opacity: 0 }, { opacity: 1, duration: .3 }, 24.3);
+      tl.fromTo("#chart .r2", { opacity: 0 }, { opacity: 1, duration: .3 }, 27.3);
+      tl.to("#chart", { x: -620, duration: .45, ease: "power2.in" }, 28.5);
+      tl.set("#chart", { opacity: 0 }, 29.0);
+      tl.to("#v3", { scale: 1, x: 0, duration: .7, ease: "power2.inOut" }, 28.6);
+
+      /* ---- 0:36-0:40 emphasis push-in + calendar ribbon ---- */
+      tl.to("#v4", { scale: 1.05, duration: .5, ease: "power2.out" }, 36.2);
+      tl.to("#v4", { scale: 1, duration: .8, ease: "power2.inOut" }, 38.9);
+      tl.set("#cal", { opacity: 1 }, 36.3);
+      tl.fromTo("#cal", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: .45, ease: "power3.out" }, 36.3);
+      tl.fromTo("#fill", { scaleX: 0 }, { scaleX: 1, duration: 1.6, ease: "power2.inOut" }, 36.6);
+      tl.to("#cal", { opacity: 0, y: 40, duration: .4 }, 39.5);
+
+      /* ---- 0:40-0:46 pan + pop-up cards ---- */
+      tl.to("#v5", { scale: 1.14, x: 70, duration: .7, ease: "power2.out" }, 40.2);
+      tl.set("#pc1", { opacity: 1 }, 42.0);
+      tl.fromTo("#pc1", { scale: .6, x: -80 }, { scale: 1, x: 0, duration: .45, ease: "back.out(2)" }, 42.0);
+      tl.set("#pc2", { opacity: 1 }, 44.5);
+      tl.fromTo("#pc2", { scale: .6, x: -80 }, { scale: 1, x: 0, duration: .45, ease: "back.out(2)" }, 44.5);
+      tl.to(["#pc1", "#pc2"], { opacity: 0, x: -120, duration: .35 }, 46.5);
+
+      /* ---- 0:46-0:50 reset + date stamp ---- */
+      tl.to("#v5", { scale: 1, x: 0, duration: .8, ease: "power2.inOut" }, 46.5);
+      tl.set("#stamp", { opacity: 1 }, 47.95);
+      tl.fromTo("#stamp", { scale: 2.2, rotation: -14 }, { scale: 1, rotation: -6, duration: .3, ease: "power4.in" }, 47.95);
+      tl.to("#stamp", { opacity: 0, duration: .3 }, 49.5);
+
+      /* ---- captions ---- */
+      tl.set("#cap0",{opacity:1},0.00);tl.fromTo("#cap0",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},0.00);tl.set("#cap0",{opacity:0},0.58);
+      tl.set("#cap1",{opacity:1},0.58);tl.fromTo("#cap1",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},0.58);tl.set("#cap1",{opacity:0},1.02);
+      tl.set("#cap2",{opacity:1},1.10);tl.fromTo("#cap2",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},1.10);tl.set("#cap2",{opacity:0},1.44);
+      tl.set("#cap3",{opacity:1},2.14);tl.fromTo("#cap3",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},2.14);tl.set("#cap3",{opacity:0},3.44);
+      tl.set("#cap4",{opacity:1},4.06);tl.fromTo("#cap4",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},4.06);tl.set("#cap4",{opacity:0},4.92);
+      tl.set("#cap5",{opacity:1},4.92);tl.fromTo("#cap5",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},4.92);tl.set("#cap5",{opacity:0},5.58);
+      tl.set("#cap6",{opacity:1},5.58);tl.fromTo("#cap6",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},5.58);tl.set("#cap6",{opacity:0},6.88);
+      tl.set("#cap7",{opacity:1},6.88);tl.fromTo("#cap7",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},6.88);tl.set("#cap7",{opacity:0},8.16);
+      tl.set("#cap8",{opacity:1},8.16);tl.fromTo("#cap8",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},8.16);tl.set("#cap8",{opacity:0},9.50);
+      tl.set("#cap9",{opacity:1},10.14);tl.fromTo("#cap9",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},10.14);tl.set("#cap9",{opacity:0},10.80);
+      tl.set("#cap10",{opacity:1},10.80);tl.fromTo("#cap10",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},10.80);tl.set("#cap10",{opacity:0},12.00);
+      tl.set("#cap11",{opacity:1},12.00);tl.fromTo("#cap11",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},12.00);tl.set("#cap11",{opacity:0},12.76);
+      tl.set("#cap12",{opacity:1},12.76);tl.fromTo("#cap12",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},12.76);tl.set("#cap12",{opacity:0},14.06);
+      tl.set("#cap13",{opacity:1},14.60);tl.fromTo("#cap13",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},14.60);tl.set("#cap13",{opacity:0},15.32);
+      tl.set("#cap14",{opacity:1},15.32);tl.fromTo("#cap14",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},15.32);tl.set("#cap14",{opacity:0},16.48);
+      tl.set("#cap15",{opacity:1},16.48);tl.fromTo("#cap15",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},16.48);tl.set("#cap15",{opacity:0},17.26);
+      tl.set("#cap16",{opacity:1},17.26);tl.fromTo("#cap16",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},17.26);tl.set("#cap16",{opacity:0},19.44);
+      tl.set("#cap17",{opacity:1},19.94);tl.fromTo("#cap17",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},19.94);tl.set("#cap17",{opacity:0},20.40);
+      tl.set("#cap18",{opacity:1},20.40);tl.fromTo("#cap18",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},20.40);tl.set("#cap18",{opacity:0},21.58);
+      tl.set("#cap19",{opacity:1},21.58);tl.fromTo("#cap19",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},21.58);tl.set("#cap19",{opacity:0},22.74);
+      tl.set("#cap20",{opacity:1},23.68);tl.fromTo("#cap20",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},23.68);tl.set("#cap20",{opacity:0},24.36);
+      tl.set("#cap21",{opacity:1},24.36);tl.fromTo("#cap21",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},24.36);tl.set("#cap21",{opacity:0},25.12);
+      tl.set("#cap22",{opacity:1},25.12);tl.fromTo("#cap22",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},25.12);tl.set("#cap22",{opacity:0},25.70);
+      tl.set("#cap23",{opacity:1},26.08);tl.fromTo("#cap23",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},26.08);tl.set("#cap23",{opacity:0},26.98);
+      tl.set("#cap24",{opacity:1},26.98);tl.fromTo("#cap24",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},26.98);tl.set("#cap24",{opacity:0},28.70);
+      tl.set("#cap25",{opacity:1},28.70);tl.fromTo("#cap25",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},28.70);tl.set("#cap25",{opacity:0},29.44);
+      tl.set("#cap26",{opacity:1},30.14);tl.fromTo("#cap26",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},30.14);tl.set("#cap26",{opacity:0},30.92);
+      tl.set("#cap27",{opacity:1},30.92);tl.fromTo("#cap27",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},30.92);tl.set("#cap27",{opacity:0},31.36);
+      tl.set("#cap28",{opacity:1},31.38);tl.fromTo("#cap28",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},31.38);tl.set("#cap28",{opacity:0},32.38);
+      tl.set("#cap29",{opacity:1},32.38);tl.fromTo("#cap29",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},32.38);tl.set("#cap29",{opacity:0},32.88);
+      tl.set("#cap30",{opacity:1},33.22);tl.fromTo("#cap30",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},33.22);tl.set("#cap30",{opacity:0},33.70);
+      tl.set("#cap31",{opacity:1},33.70);tl.fromTo("#cap31",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},33.70);tl.set("#cap31",{opacity:0},34.32);
+      tl.set("#cap32",{opacity:1},34.32);tl.fromTo("#cap32",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},34.32);tl.set("#cap32",{opacity:0},35.70);
+      tl.set("#cap33",{opacity:1},36.30);tl.fromTo("#cap33",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},36.30);tl.set("#cap33",{opacity:0},37.48);
+      tl.set("#cap34",{opacity:1},37.48);tl.fromTo("#cap34",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},37.48);tl.set("#cap34",{opacity:0},38.70);
+      tl.set("#cap35",{opacity:1},38.70);tl.fromTo("#cap35",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},38.70);tl.set("#cap35",{opacity:0},39.72);
+      tl.set("#cap36",{opacity:1},40.08);tl.fromTo("#cap36",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},40.08);tl.set("#cap36",{opacity:0},41.26);
+      tl.set("#cap37",{opacity:1},41.26);tl.fromTo("#cap37",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},41.26);tl.set("#cap37",{opacity:0},42.16);
+      tl.set("#cap38",{opacity:1},42.80);tl.fromTo("#cap38",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},42.80);tl.set("#cap38",{opacity:0},43.52);
+      tl.set("#cap39",{opacity:1},43.52);tl.fromTo("#cap39",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},43.52);tl.set("#cap39",{opacity:0},45.00);
+      tl.set("#cap40",{opacity:1},45.00);tl.fromTo("#cap40",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},45.00);tl.set("#cap40",{opacity:0},45.98);
+      tl.set("#cap41",{opacity:1},46.46);tl.fromTo("#cap41",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},46.46);tl.set("#cap41",{opacity:0},47.18);
+      tl.set("#cap42",{opacity:1},47.18);tl.fromTo("#cap42",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},47.18);tl.set("#cap42",{opacity:0},48.60);
+      tl.set("#cap43",{opacity:1},48.60);tl.fromTo("#cap43",{y:18,scale:.92},{y:0,scale:1,duration:.18,ease:"back.out(2)"},48.60);tl.set("#cap43",{opacity:0},49.64);
+
+      /* ---- 0:50-0:55 outro ---- */
+      tl.fromTo("#end", { opacity: 0 }, { opacity: 1, duration: .35, ease: "power1.out" }, 49.8);
+      tl.fromTo("#pip", { opacity: 0, scale: .7 }, { opacity: 1, scale: 1, duration: .6, ease: "back.out(1.6)" }, 50.3);
+      tl.fromTo("#pip", { y: 0 }, { y: -10, duration: 1.2, ease: "sine.inOut", yoyo: true, repeat: 3 }, 50.9);
+      tl.fromTo("#logo", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .6, ease: "power3.out" }, 50.7);
+      tl.fromTo("#btn", { opacity: 0, scale: .7 }, { opacity: 1, scale: 1, duration: .5, ease: "back.out(2)" }, 51.2);
+      tl.fromTo("#btn", { scale: 1 }, { scale: 1.05, duration: .45, ease: "sine.inOut", yoyo: true, repeat: 7 }, 51.8);
+      tl.fromTo("#sub", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .5 }, 51.7);
+      tl.to("#arrow", { opacity: 1, duration: .3 }, 52.2);
+      tl.fromTo("#arrow", { y: 0 }, { y: 24, duration: .45, ease: "sine.inOut", yoyo: true, repeat: 5 }, 52.2);
+      tl.to("#tag", { opacity: 1, duration: .6 }, 52.8);
+
       window.__timelines["main"] = tl;
       tl.seek(0);
     </script>
