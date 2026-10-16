@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en" data-resolution="portrait">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: #fff; }
+      #root { position: relative; width: 1080px; height: 1920px; font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+      .vid { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; object-fit: cover; }
+      /* logo badge over the clips */
+      #badge { position: absolute; left: 48px; top: 64px; width: 330px; height: 112px; background: #fff; border-radius: 22px;
+        box-shadow: 0 8px 28px rgba(0,0,0,.28); display: flex; align-items: center; justify-content: center; z-index: 5; }
+      #badge img { width: 290px; height: auto; }
+      /* progress bar */
+      #bar { position: absolute; left: 0; bottom: 0; height: 14px; width: 1080px; z-index: 5;
+        background: linear-gradient(90deg, #67B428, #077FC3); transform-origin: left center; }
+      /* end screen */
+      #end { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; background: #fff; z-index: 10; opacity: 0; }
+      #end .top { position: absolute; left: 0; top: 0; width: 1080px; height: 28px; background: linear-gradient(90deg, #67B428, #077FC3); }
+      #end .bot { position: absolute; left: 0; bottom: 0; width: 1080px; height: 28px; background: linear-gradient(90deg, #077FC3, #67B428); }
+      #logo { position: absolute; left: 100px; top: 330px; width: 880px; height: auto; opacity: 0; }
+      #head { position: absolute; left: 60px; width: 960px; top: 800px; text-align: center; font-size: 104px; font-weight: 800;
+        line-height: 1.12; letter-spacing: -0.02em; color: #077FC3; }
+      #head .w { display: inline-block; opacity: 0; margin: 0 14px; }
+      #head .g { color: #67B428; }
+      #rule { position: absolute; left: 340px; top: 1250px; width: 400px; height: 10px; border-radius: 5px;
+        background: linear-gradient(90deg, #67B428, #077FC3); transform-origin: left center; }
+      #arrow { position: absolute; left: 490px; top: 1330px; width: 100px; height: 100px; opacity: 0; }
+      #tag { position: absolute; left: 0; width: 1080px; top: 1560px; text-align: center; font-size: 40px; font-weight: 600;
+        letter-spacing: .28em; color: #323232; opacity: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="55" data-width="1080" data-height="1920">
+      <video id="v1" class="vid clip" src="media/c1.mp4" data-start="0"  data-duration="10" data-track-index="0" data-has-audio="true" playsinline></video>
+      <video id="v2" class="vid clip" src="media/c2.mp4" data-start="10" data-duration="10" data-track-index="0" data-has-audio="true" playsinline></video>
+      <video id="v3" class="vid clip" src="media/c3.mp4" data-start="20" data-duration="10" data-track-index="0" data-has-audio="true" playsinline></video>
+      <video id="v4" class="vid clip" src="media/c4.mp4" data-start="30" data-duration="10" data-track-index="0" data-has-audio="true" playsinline></video>
+      <video id="v5" class="vid clip" src="media/c5.mp4" data-start="40" data-duration="10" data-track-index="0" data-has-audio="true" playsinline></video>
+
+      <div id="badge" class="clip" data-start="0" data-duration="50" data-track-index="1"><img src="media/logo.jpg" alt="Allen & Associates" /></div>
+      <div id="bar" class="clip" data-start="0" data-duration="50" data-track-index="2"></div>
+
+      <div id="end" class="clip" data-start="50" data-duration="5" data-track-index="3">
+        <div class="top"></div><div class="bot"></div>
+        <img id="logo" src="media/logo.jpg" alt="Allen & Associates Insurance Agency" />
+        <div id="head">
+          <span class="w">Click</span><span class="w">the</span><span class="w">link</span><span class="w">below</span>
+          <span class="w">for</span><span class="w">the</span><span class="w g">full</span><span class="w g">video</span>
+        </div>
+        <div id="rule"></div>
+        <svg id="arrow" viewBox="0 0 100 100"><path d="M50 8 V74 M20 46 L50 78 L80 46" fill="none" stroke="#67B428" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div id="tag">MAKING MEDICARE EASY</div>
+      </div>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      // badge + progress over the clips
+      tl.fromTo("#badge", { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power3.out" }, 0.3);
+      tl.fromTo("#bar", { scaleX: 0 }, { scaleX: 1, duration: 50, ease: "none" }, 0);
+      tl.to("#badge", { opacity: 0, duration: 0.3 }, 49.7);
+      // end screen
+      tl.set("#end", { opacity: 1 }, 50);
+      tl.fromTo("#end", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power1.out" }, 49.8);
+      tl.fromTo("#logo", { opacity: 0, y: 40, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: "power3.out" }, 50.3);
+      tl.fromTo("#head .w", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.45, ease: "back.out(1.6)", stagger: 0.12 }, 51.0);
+      tl.fromTo("#rule", { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: "power2.out" }, 52.3);
+      tl.to("#arrow", { opacity: 1, duration: 0.3 }, 52.6);
+      tl.fromTo("#arrow", { y: 0 }, { y: 24, duration: 0.5, ease: "sine.inOut", yoyo: true, repeat: 3 }, 52.6);
+      tl.to("#tag", { opacity: 1, duration: 0.6 }, 53.0);
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
