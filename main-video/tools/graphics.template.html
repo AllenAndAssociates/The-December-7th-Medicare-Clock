@@ -159,9 +159,31 @@
       #zoombox svg { position: absolute; left: 80px; top: 230px; width: 220px; height: 220px; }
       #zoombox .k { position: absolute; left: 340px; top: 250px; width: 600px; font-size: 56px; font-weight: 900; line-height: 1.12; color: var(--navy); }
 
+      /* step-2 checklist (scene 10 pickup) */
+      .goldbar { position: absolute; left: 0; top: 0; width: 1920px; height: 150px; background: var(--gold); color: var(--navy); font-size: 56px; font-weight: 900;
+        letter-spacing: .02em; display: flex; align-items: center; justify-content: center; }
+      .bchk { position: absolute; left: 330px; width: 1260px; height: 220px; border-radius: 30px; background: #fff; display: flex; align-items: center; gap: 46px; padding: 0 56px;
+        font-size: 58px; font-weight: 900; line-height: 1.1; color: var(--navy); box-shadow: 0 18px 40px rgba(20,33,61,.12); }
+      .bchk .bx { flex: none; width: 128px; height: 128px; border-radius: 22px; border: 8px solid var(--navy); position: relative; background: #fff; }
+      .bchk .bx svg { position: absolute; left: -6px; top: -16px; width: 140px; height: 140px; }
+      .bchk small { display: block; font-size: 30px; font-weight: 800; color: var(--mute); letter-spacing: .1em; margin-bottom: 10px; }
+      #b1 { top: 300px; background: #E6F4EC; } #b2 { top: 580px; }
+      /* special enrollment period (scene 15 pickup) */
+      #septrack { left: 360px; top: 560px; width: 1200px; height: 40px; border-radius: 20px; background: #E2E7E4; }
+      #sepbig { left: 360px; top: 560px; width: 1200px; height: 40px; border-radius: 20px; background: var(--green); transform-origin: left center; }
+      .sdot { position: absolute; top: 545px; width: 70px; height: 70px; border-radius: 35px; background: #fff; border: 12px solid var(--green); }
+      .smk { position: absolute; top: 650px; width: 320px; text-align: center; font-size: 56px; font-weight: 900; color: var(--navy); }
+      .smk small { display: block; font-size: 28px; color: var(--mute); font-weight: 800; letter-spacing: .1em; margin-top: 6px; }
+      #sepcap { left: 0; width: 1920px; top: 860px; text-align: center; font-size: 60px; font-weight: 900; color: var(--green); opacity: 0; }
+      /* best practice (scene 15 pickup) */
+      #bstar { left: 820px; top: 230px; width: 280px; height: 280px; opacity: 0; filter: drop-shadow(0 18px 30px rgba(184,110,0,.35)); }
+      #bpbig { top: 560px; } #bpsub { top: 690px; font-size: 58px; font-weight: 800; color: var(--green); }
+
       /* ---------- master board (scene 16) ---------- */
       .col { top: 150px; width: 585px; height: 870px; border-radius: 26px; background: #fff; z-index: 30; opacity: 0; overflow: hidden; box-shadow: 0 22px 50px rgba(20,33,61,.14); }
       #colR { left: 680px; } #colG { left: 1295px; }
+      #colRglow { left: 668px; top: 138px; width: 609px; height: 894px; border-radius: 34px; border: 10px solid var(--red); z-index: 29; opacity: 0;
+        box-shadow: 0 0 46px rgba(217,56,41,.55); }
       .col .h { height: 120px; color: #fff; font-size: 44px; font-weight: 900; letter-spacing: .04em; display: flex; align-items: center; justify-content: center; gap: 18px; }
       .col .h svg { width: 52px; height: 52px; }
       #colR .h { background: var(--red); } #colG .h { background: var(--green); }
@@ -295,12 +317,29 @@
         <div id="dJan" class="dblk"><div class="d">JAN 1</div><div class="l">COVERAGE STARTS</div></div>
         <div id="dstamp" class="abs">DEADLINE</div></div>
 
+      <div id="cut10b" class="cut abs"><div class="goldbar">INSIDER TIP: APPLY FOR MEDIGAP FIRST</div>
+        <div id="b1" class="bchk"><div class="bx"><svg viewBox="0 0 82 82"><path d="M14 44l18 18 40-46" fill="none" stroke="#1E8E5A" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><small>STEP 1</small>Pass Health Questions &amp; Get Approved</div></div>
+        <div id="b2" class="bchk"><div class="bx"><svg id="bck2" viewBox="0 0 82 82"><path d="M14 44l18 18 40-46" fill="none" stroke="#1E8E5A" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg></div><div><small>STEP 2</small>Drop Advantage &amp; Add Part D by Dec&nbsp;7</div></div></div>
+
+      <div id="cut15a" class="cut abs"><div class="kick" style="color:#1E8E5A">WHEN A PLAN NON-RENEWS</div>
+        <div class="big" style="top:250px">Special Enrollment Period</div>
+        <div id="septrack" class="abs"></div><div id="sepbig" class="abs"></div>
+        <div class="sdot" style="left:325px"></div><div class="sdot" style="left:925px"></div><div class="sdot" style="left:1525px"></div>
+        <div class="smk" style="left:200px">DEC<small>PLAN ENDS</small></div><div class="smk" style="left:800px">JAN 1</div><div class="smk" style="left:1400px">FEB 28<small>SEP ENDS</small></div>
+        <div id="sepcap" class="abs">Lasts through the end of February</div></div>
+
+      <div id="cut15b" class="cut abs"><div class="kick" style="color:#B86E00">BEST PRACTICE</div>
+        <svg id="bstar" class="abs" viewBox="0 0 86 86"><path d="M43 4l11.6 24.6 26.9 3.3-19.8 18.6 5.1 26.6L43 64 19.2 77.1l5.1-26.6L4.5 31.9l26.9-3.3z" fill="#F5A623"/></svg>
+        <div id="bpbig" class="big">Choose by December 31</div>
+        <div id="bpsub" class="big">for seamless January 1 coverage</div></div>
+
       <div id="dim" class="abs"></div>
       <div id="zoombox" class="abs"><div class="gold" id="zgold">INSIDER TIP: APPLY FOR MEDIGAP FIRST</div><div class="hl" id="zhl"></div>
         <svg viewBox="0 0 120 120"><path d="M60 6l46 16v34c0 30-20 50-46 60C34 106 14 86 14 56V22z" fill="#14213D"/><path d="M40 60l14 14 28-30" fill="none" stroke="#F5A623" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/></svg>
         <div class="k">Original Medicare +<br/>Medigap Supplement</div></div>
 
       <!-- ===== master board ===== -->
+      <div id="colRglow" class="abs"></div>
       <div id="colR" class="col abs"><div class="h"><svg viewBox="0 0 48 48"><rect x="5" y="9" width="38" height="34" rx="5" fill="none" stroke="#fff" stroke-width="4"/><path d="M5 19h38M15 4v9M33 4v9" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>BY DEC 7TH</div>
         <div class="it i1" id="mr1"><div class="glow"></div><div class="n">1</div>Standalone Part D</div>
         <div class="it i2" id="mr2"><div class="glow"></div><div class="n">2</div>Switch Advantage</div>
@@ -359,8 +398,10 @@
       };
       const R2 = [1215, 596], G3 = [725, 596];
       const RS = [[1760, 241], [1760, 391], [1760, 541]], GS = [[170, 241], [170, 391], [170, 541]];
-      const cutIn = (sel, t) => { tl.set(sel, { opacity: 1 }, t); tl.fromTo(sel, { scale: 1.06, opacity: 0 }, { scale: 1, opacity: 1, duration: .3, ease: "power2.out" }, t); };
-      const cutOut = (sel, t) => tl.to(sel, { opacity: 0, scale: .97, duration: .25, ease: "power2.in" }, t);
+      // Full-frame cards push in, fully opaque, over 7 frames and leave on a hard
+      // cut, the same frame Arric returns: nothing ever cross-dissolves.
+      const cutIn = (sel, t) => { tl.set(sel, { opacity: 1 }, t); tl.fromTo(sel, { x: 1920 }, { x: 0, duration: 7 / 30, ease: "power3.out" }, t); };
+      const cutOut = (sel, t) => tl.set(sel, { opacity: 0 }, t);
 
       /* ===== Scene 6: Bucket 1 intro ===== */
       tl.set("#hdr2", { opacity: 1 }, C.s6 + .3);
@@ -370,14 +411,14 @@
 
       /* ===== Scene 7: lock-in rule ===== */
       pop("#t1", C.s7_form); pop("#t2", C.s7_pharm); pop("#t3", C.s7_copay);
-      cutIn("#cut7", C.s7_vo);
-      tl.fromTo("#cal .m", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: .25, stagger: .03, ease: "power2.out" }, C.s7_vo + .05);
-      tl.fromTo("#calbar", { scaleX: 0 }, { scaleX: 1, duration: C.s7_locked - C.s7_vo - .35, ease: "none" }, C.s7_vo + .35);
-      tl.set("#lock", { opacity: 1 }, C.s7_locked);
-      tl.fromTo("#lock", { scale: 2.4, rotation: -12 }, { scale: 1, rotation: 0, duration: .28, ease: "power4.in" }, C.s7_locked - .2);
-      tl.fromTo("#cut7", { x: 0 }, { x: 10, duration: .05, yoyo: true, repeat: 3, ease: "none" }, C.s7_locked + .08);
-      tl.fromTo("#lockcap", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .35, ease: "power3.out" }, C.s7_locked + .3);
-      cutOut("#cut7", C.s8 - .02);
+      cutIn("#cut7", C.vo7);
+      tl.fromTo("#cal .m", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: .25, stagger: .03, ease: "power2.out" }, C.vo7 + .05);
+      tl.fromTo("#calbar", { scaleX: 0 }, { scaleX: 1, duration: C.s7_lock - C.vo7 - .25, ease: "none" }, C.vo7 + .2);
+      tl.set("#lock", { opacity: 1 }, C.s7_lock - .2);
+      tl.fromTo("#lock", { scale: 2.4, rotation: -12 }, { scale: 1, rotation: 0, duration: .2, ease: "power4.in" }, C.s7_lock - .2);
+      tl.to("#cut7", { x: 10, duration: .05, yoyo: true, repeat: 3, ease: "none" }, C.s7_lock + .02);
+      tl.fromTo("#lockcap", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .3, ease: "power3.out" }, C.s7_lock + .2);
+      cutOut("#cut7", C.vo7_end);
 
       /* ===== Scene 8: Advantage switch ===== */
       dock("#cR1", "#rs1", ...R2, ...RS[0], C.s8 - .25);
@@ -386,13 +427,13 @@
       tl.fromTo("#ar1 > *", { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: .35, stagger: .12, ease: "power3.out" }, C.s8_arrow1);
       tl.set("#ar2", { opacity: 1 }, C.s8_arrow2);
       tl.fromTo("#ar2 > *", { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: .35, stagger: .12, ease: "power3.out" }, C.s8_arrow2);
-      cutIn("#cut8", C.s8_vo);
-      pop("#dJan", C.s8_vo + .1, .8); pop("#darr", C.s8_vo + .35, .8);
+      cutIn("#cut8", C.vo8);
+      pop("#dJan", C.vo8 + .1, .8); pop("#darr", C.vo8 + .35, .8);
       pop("#dDec", C.s8_dec - .3, .8);
       tl.set("#dstamp", { opacity: 1 }, C.s8_dec - .1);
       tl.fromTo("#dstamp", { scale: 2.2, rotation: -16 }, { scale: 1, rotation: -6, duration: .22, ease: "power4.in" }, C.s8_dec - .2);
       tl.set("#r2badge", { opacity: 1 }, C.s8_dec);
-      cutOut("#cut8", C.s9 - .02);
+      cutOut("#cut8", C.vo8_end);
 
       /* ===== Scene 9: leave Advantage flowchart ===== */
       dock("#cR2", "#rs2", ...R2, ...RS[1], C.s9 - .1);
@@ -412,16 +453,21 @@
       tl.to("#zhl", { scaleX: 1, duration: .45, ease: "power2.out" }, C.s10_apply + .2);
       tl.set("#rs3 .full", { opacity: 1 }, C.s10 + .3); tl.set("#cR3", { opacity: 0 }, C.s10 + .3);
       tl.set("#tip", { opacity: 1 }, C.s10 + .3);
-      tl.to(["#zoombox", "#dim"], { opacity: 0, duration: .25 }, C.s10_back - .05);
+      tl.set(["#zoombox", "#dim"], { opacity: 0 }, C.s10_back);
       tl.fromTo("#k1", { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: .35, ease: "power3.out" }, C.s10_back + .4);
       tl.fromTo("#k2", { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: .35, ease: "power3.out" }, C.s10_back + .7);
       tl.to("#ck1 path", { strokeDashoffset: 0, duration: .3, ease: "power2.out" }, C.s10_check1);
       tl.to("#k1", { backgroundColor: "#E6F4EC", duration: .3 }, C.s10_check1);
+      cutIn("#cut10b", C.vo10b);
+      tl.to("#bck2 path", { strokeDashoffset: 0, duration: .3, ease: "power2.out" }, C.s10_check2);
+      tl.to("#b2", { backgroundColor: "#E6F4EC", duration: .3 }, C.s10_check2);
+      cutOut("#cut10b", C.vo10b_end);
       tl.to("#ck2 path", { strokeDashoffset: 0, duration: .3, ease: "power2.out" }, C.s10_check2);
       tl.to("#k2", { backgroundColor: "#E6F4EC", duration: .3 }, C.s10_check2);
 
       /* ===== Scene 11: flip the chart ===== */
-      tl.to(["#hdr2", "#rs1", "#rs2", "#rs3", "#tip"], { rotationY: 90, transformOrigin: "100% 50%", opacity: 0, duration: .45, ease: "power2.in", stagger: .03 }, C.s11_flip);
+      // fold the red stage away just before Arric crosses it
+      tl.to(["#hdr2", "#rs1", "#rs2", "#rs3", "#tip"], { rotationY: 90, transformOrigin: "100% 50%", opacity: 0, duration: .26, ease: "power2.in" }, C.s11_flip - .2);
       tl.set("#hdr3", { opacity: 1 }, C.s11_flip + .35);
       tl.fromTo("#hdr3", { rotationY: -90, transformOrigin: "0% 50%" }, { rotationY: 0, duration: .5, ease: "power2.out" }, C.s11_flip + .35);
       pop("#gs1", C.s11_flip + .7); pop("#gs2", C.s11_flip + .85); pop("#gs3", C.s11_flip + 1.0);
@@ -460,9 +506,17 @@
       tl.to("#g3a", { opacity: 0, y: -40, duration: .35 }, C.s15 + .2);
       tl.set("#sep", { opacity: 1 }, C.s15 + .45);
       tl.fromTo("#sep .lab, #sep .track, #sep .dot, #sep .mk", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: .3, stagger: .03 }, C.s15 + .45);
-      tl.fromTo("#sepfill", { scaleX: 0 }, { scaleX: 1, duration: 1.2, ease: "power2.inOut" }, C.s15_special);
-      tl.set("#best", { opacity: 1 }, C.s15_still);
-      tl.fromTo("#best", { y: -140, scale: .7 }, { y: 0, scale: 1, duration: .45, ease: "bounce.out" }, C.s15_still);
+      tl.fromTo("#sepfill", { scaleX: 0 }, { scaleX: 1, duration: 1.2, ease: "power2.inOut" }, C.vo15a + .4);
+      cutIn("#cut15a", C.vo15a);
+      tl.fromTo("#sepbig", { scaleX: 0 }, { scaleX: 1, duration: 1.6, ease: "power2.inOut" }, C.vo15a + .4);
+      tl.fromTo("#sepcap", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .35, ease: "power3.out" }, C.s15_feb - .6);
+      cutOut("#cut15a", C.vo15a_end);
+      tl.set("#best", { opacity: 1 }, C.vo15b + .3);
+      cutIn("#cut15b", C.vo15b);
+      tl.set("#bstar", { opacity: 1 }, C.s15_dec - .25);
+      tl.fromTo("#bstar", { y: -300, rotation: -60, scale: .6 }, { y: 0, rotation: 0, scale: 1, duration: .45, ease: "bounce.out" }, C.s15_dec - .25);
+      tl.fromTo("#bpsub", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .35 }, C.s15_dec + .9);
+      cutOut("#cut15b", C.vo15b_end);
 
       /* ===== Scene 16: master board ===== */
       tl.to(["#hdr3", "#gs1", "#gs2", "#gs3", "#cG3"], { x: -700, opacity: 0, duration: .4, ease: "power2.in", stagger: .03 }, C.s16 - .1);
@@ -473,17 +527,26 @@
         tl.set(s, { opacity: 1 }, C.s16 + .5 + i * .14);
         tl.fromTo(s, { y: -30, scale: .9 }, { y: 0, scale: 1, duration: .25, ease: "back.out(2)" }, C.s16 + .5 + i * .14);
       });
-      tl.to("#colR .glow", { opacity: 1, duration: .18, yoyo: true, repeat: 3 }, C.s16_partd);
-      tl.to("#colR .glow", { opacity: .9, duration: .2 }, C.s16_partd + .8);
+      tl.to("#mr1 .glow", { opacity: 1, duration: .18, yoyo: true, repeat: 3 }, C.s16_partd);
+      tl.to("#mr1 .glow", { opacity: .9, duration: .2 }, C.s16_partd + .8);
+      // "or a Medicare Advantage plan": Arric steps out, the board centers itself
+      tl.to(["#colR", "#colG", "#colRglow"], { x: -290, duration: 7 / 30, ease: "power3.out" }, C.vo16);
+      tl.to(["#mr2 .glow", "#mr3 .glow"], { opacity: 1, duration: .18, yoyo: true, repeat: 3 }, C.s16_ma - .1);
+      tl.to(["#mr2 .glow", "#mr3 .glow"], { opacity: .9, duration: .2 }, C.s16_ma + .7);
+      tl.to(["#colR", "#colG", "#colRglow"], { x: 0, duration: 7 / 30, ease: "power3.inOut" }, C.vo16_end - 7 / 30);
+      // whole BY DEC 7TH column glows on "hard deadline"
+      tl.fromTo("#colRglow", { opacity: 0, scale: 1.04 }, { opacity: 1, scale: 1, duration: .25, ease: "power2.out" }, C.s16_hard - .05);
+      tl.to("#colRglow", { opacity: .55, duration: .35, yoyo: true, repeat: 3, ease: "sine.inOut" }, C.s16_hard + .3);
       tl.set("#bclock", { opacity: 1 }, C.s16_clock - .1);
       tl.fromTo("#bclock", { scale: .4 }, { scale: 1, duration: .35, ease: "back.out(2)" }, C.s16_clock - .1);
       tl.fromTo("#bh1", { rotation: 0, svgOrigin: "55 55" }, { rotation: 360, svgOrigin: "55 55", duration: .9, ease: "power2.out" }, C.s16_clock);
 
       /* ===== Scene 17-18: contact card ===== */
-      tl.to(["#colR", "#colG", "#bclock"], { x: 400, opacity: 0, filter: "blur(14px)", duration: .45, ease: "power2.in" }, C.s17 - .05);
+      tl.to(["#colR", "#colG", "#bclock", "#colRglow"], { x: 400, opacity: 0, filter: "blur(14px)", duration: .45, ease: "power2.in" }, C.s17 - .05);
       tl.set("#cta", { opacity: 1 }, C.s17 + .05);
       tl.fromTo("#cta", { opacity: 0 }, { opacity: 1, duration: .3 }, C.s17 + .05);
       tl.fromTo("#por", { scale: .7, opacity: 0 }, { scale: 1, opacity: 1, duration: .55, ease: "back.out(1.6)" }, C.s17 + .1);
+      tl.set("#por img", { opacity: 0 }, C.live);   // live video of Arric is composited into the circle from here
       tl.fromTo("#acard", { x: 700, opacity: 0 }, { x: 0, opacity: 1, duration: .6, ease: "power3.out" }, C.s17 + .2);
       tl.fromTo("#plogo", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: .45, ease: "power3.out" }, C.s17 + .45);
       pop("#sv1", C.s17_partd, .6); pop("#sv2", C.s17_ma, .6); pop("#sv3", C.s17_gap, .6);

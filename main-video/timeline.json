@@ -2,210 +2,302 @@
  "fps": 30,
  "width": 1920,
  "height": 1080,
- "total": 141.39,
+ "total": 142.18,
  "pieces": [
   {
    "scene": 6,
    "kind": "clip",
    "src": "Changing_Medicare_Part_D_plan_20261020200242.mp4",
-   "in": 0.7,
-   "out": 9.4,
+   "audio": "sts/partd.mp3",
+   "in": 0.9,
+   "out": 9.26,
    "start": 0.0,
-   "end": 8.7
+   "end": 8.36
   },
   {
    "scene": 7,
    "kind": "clip",
    "src": "Reviewing_Medicare_Part_D_plans_20261020200401.mp4",
-   "in": 0.45,
-   "out": 9.52,
-   "start": 8.7,
-   "end": 17.77
+   "audio": "sts/lockin.mp3",
+   "in": 0.66,
+   "out": 9.58,
+   "start": 8.36,
+   "end": 17.28
   },
   {
    "scene": 7,
    "kind": "vo",
    "src": "vo/vo7.mp3",
+   "audio": "vo/vo7.mp3",
    "in": 0.0,
-   "out": 3.62,
-   "start": 17.77,
-   "end": 21.39
+   "out": 3.07,
+   "start": 17.28,
+   "end": 20.35
   },
   {
    "scene": 8,
    "kind": "clip",
    "src": "Medicare_enrollment_deadline_Dec…_1080p_20261020200459.mp4",
-   "in": 0.3,
-   "out": 8.38,
-   "start": 21.39,
-   "end": 29.47
+   "audio": "sts/switchma.mp3",
+   "in": 0.36,
+   "out": 8.4,
+   "start": 20.35,
+   "end": 28.39
   },
   {
    "scene": 8,
    "kind": "vo",
    "src": "vo/vo8.mp3",
+   "audio": "vo/vo8.mp3",
    "in": 0.0,
-   "out": 2.9,
-   "start": 29.47,
-   "end": 32.37
+   "out": 3.07,
+   "start": 28.39,
+   "end": 31.46
   },
   {
    "scene": 9,
    "kind": "clip",
    "src": "Leaving_Medicare_Advantage_plan_1080p_20261020195931.mp4",
-   "in": 0.0,
-   "out": 9.84,
-   "start": 32.37,
-   "end": 42.21
+   "audio": "sts/leaving.mp3",
+   "in": 0.020000000000000004,
+   "out": 9.86,
+   "start": 31.46,
+   "end": 41.3
   },
   {
    "scene": 10,
    "kind": "vo",
    "src": "vo/vo10.mp3",
+   "audio": "vo/vo10.mp3",
    "in": 0.0,
-   "out": 4.5,
-   "start": 42.21,
-   "end": 46.71
+   "out": 4.35,
+   "start": 41.3,
+   "end": 45.65
   },
   {
    "scene": 10,
    "kind": "clip",
    "src": "Applying_for_Medicare_Supplement…_1080p_20261020195722.mp4",
+   "audio": "sts/underwrite.mp3",
    "in": 1.38,
-   "out": 9.9,
-   "start": 46.71,
-   "end": 55.23
+   "out": 6.15,
+   "start": 45.65,
+   "end": 50.42
+  },
+  {
+   "scene": 10,
+   "kind": "vo",
+   "src": "vo/vo10b.mp3",
+   "audio": "vo/vo10b.mp3",
+   "in": 0.0,
+   "out": 4.23,
+   "start": 50.42,
+   "end": 54.65
   },
   {
    "scene": 11,
    "kind": "clip",
    "src": "Spoken_audio_about_Medigap_policies_20261020200114.mp4",
-   "in": 0.25,
-   "out": 9.1,
-   "start": 55.23,
-   "end": 64.08
+   "audio": "sts/flip.mp3",
+   "in": 0.33999999999999997,
+   "out": 8.979999999999999,
+   "start": 54.65,
+   "end": 63.29
   },
   {
    "scene": 12,
    "kind": "clip",
    "src": "Medicare_supplement_open_enrollm…_1080p_20261020200554.mp4",
-   "in": 0.0,
-   "out": 9.95,
-   "start": 64.08,
-   "end": 74.03
+   "audio": "sts/nofall.mp3",
+   "in": 0.020000000000000004,
+   "out": 9.94,
+   "start": 63.29,
+   "end": 73.21
   },
   {
    "scene": 13,
    "kind": "clip",
    "src": "Applying_for_Medicare_Part_B_20261020200651.mp4",
-   "in": 0.0,
+   "audio": "sts/partb.mp3",
+   "in": 0.039999999999999994,
    "out": 10.0,
-   "start": 74.03,
-   "end": 84.03
+   "start": 73.21,
+   "end": 83.17
   },
   {
    "scene": 14,
    "kind": "clip",
    "src": "Medicare_Advantage_plan_terminat…_1080p_20261020200744.mp4",
+   "audio": "sts/terminated.mp3",
    "in": 0.0,
    "out": 9.92,
-   "start": 84.03,
-   "end": 93.95
+   "start": 83.17,
+   "end": 93.09
   },
   {
    "scene": 15,
    "kind": "clip",
    "src": "Choosing_Medicare_plan_before_De…_20261020202455.mp4",
-   "in": 0.1,
-   "out": 9.9,
-   "start": 93.95,
-   "end": 103.75
+   "audio": "sts/nuance.mp3",
+   "in": 0.18,
+   "out": 2.5,
+   "start": 93.09,
+   "end": 95.41
+  },
+  {
+   "scene": 15,
+   "kind": "vo",
+   "src": "vo/vo15a.mp3",
+   "audio": "vo/vo15a.mp3",
+   "in": 0.0,
+   "out": 3.69,
+   "start": 95.41,
+   "end": 99.1
+  },
+  {
+   "scene": 15,
+   "kind": "clip",
+   "src": "Choosing_Medicare_plan_before_De…_20261020202455.mp4",
+   "audio": "sts/nuance.mp3",
+   "in": 3.72,
+   "out": 6.62,
+   "start": 99.1,
+   "end": 102.0
+  },
+  {
+   "scene": 15,
+   "kind": "vo",
+   "src": "vo/vo15b.mp3",
+   "audio": "vo/vo15b.mp3",
+   "in": 0.0,
+   "out": 4.27,
+   "start": 102.0,
+   "end": 106.27
   },
   {
    "scene": 16,
    "kind": "clip",
    "src": "Medicare_plan_enrollment_deadline_1080p_20261020202547.mp4",
-   "in": 0.35,
+   "audio": "sts/summary.mp3",
+   "in": 0.44,
+   "out": 5.46,
+   "start": 106.27,
+   "end": 111.29
+  },
+  {
+   "scene": 16,
+   "kind": "vo",
+   "src": "vo/vo16.mp3",
+   "audio": "vo/vo16.mp3",
+   "in": 0.0,
+   "out": 1.61,
+   "start": 111.29,
+   "end": 112.9
+  },
+  {
+   "scene": 16,
+   "kind": "clip",
+   "src": "Medicare_plan_enrollment_deadline_1080p_20261020202547.mp4",
+   "audio": "sts/summary.mp3",
+   "in": 5.7,
    "out": 9.7,
-   "start": 103.75,
-   "end": 113.1
+   "start": 112.9,
+   "end": 116.9
   },
   {
    "scene": 17,
    "kind": "vo",
    "src": "vo/vo17.mp3",
+   "audio": "vo/vo17.mp3",
    "in": 0.0,
-   "out": 16.3,
-   "start": 113.5,
-   "end": 129.8
+   "out": 14.81,
+   "start": 117.2,
+   "end": 132.01
   },
   {
    "scene": 18,
    "kind": "vo",
    "src": "vo/vo18.mp3",
+   "audio": "vo/vo18.mp3",
    "in": 0.0,
-   "out": 8.39,
-   "start": 129.8,
-   "end": 138.19
+   "out": 7.17,
+   "start": 132.01,
+   "end": 139.18
   }
  ],
  "cues": {
   "s6": 0.0,
-  "s7": 8.7,
-  "s8": 21.39,
-  "s9": 32.37,
-  "s10": 42.21,
-  "s11": 55.23,
-  "s12": 64.08,
-  "s13": 74.03,
-  "s14": 84.03,
-  "s15": 93.95,
-  "s16": 103.75,
-  "s17": 113.1,
-  "s18": 129.8,
-  "end": 141.39,
-  "s6_three": 1.02,
-  "s6_first": 4.08,
-  "s7_form": 9.29,
-  "s7_pharm": 10.07,
-  "s7_copay": 11.27,
-  "s7_vo": 17.77,
-  "s7_locked": 18.19,
-  "s7_year": 20.55,
-  "s8_arrow1": 22.97,
-  "s8_arrow2": 25.05,
-  "s8_vo": 29.47,
-  "s8_dec": 30.53,
-  "s9_step1": 33.53,
-  "s9_step2": 35.71,
-  "s9_step3": 40.489,
-  "s10_apply": 43.99,
-  "s10_back": 46.71,
-  "s10_check1": 50.47,
-  "s10_check2": 53.11,
-  "s11_flip": 55.8,
-  "s11_first": 59.88,
-  "s12_no": 65.98,
-  "s12_year": 71.76,
-  "s12_health": 73.24,
-  "s13_bday": 80.95,
-  "s13_work": 82.069,
-  "s13_not": 83.09,
-  "s14_letter": 86.99,
-  "s14_term": 88.79,
-  "s14_tech": 92.11,
-  "s15_special": 96.41,
-  "s15_still": 98.81,
-  "s15_jan": 102.73,
-  "s16_partd": 108.0,
-  "s16_clock": 112.4,
-  "s17_partd": 117.7,
-  "s17_ma": 119.04,
-  "s17_gap": 121.16,
-  "s17_call": 122.54,
-  "s17_visit": 126.94,
-  "s18_sub": 131.2,
-  "s18_share": 134.58
+  "s7": 8.36,
+  "s8": 20.35,
+  "s9": 31.46,
+  "s10": 41.3,
+  "s11": 54.65,
+  "s12": 63.29,
+  "s13": 73.21,
+  "s14": 83.17,
+  "s15": 93.09,
+  "s16": 106.27,
+  "s17": 116.9,
+  "s18": 132.01,
+  "end": 142.18,
+  "vo7": 17.28,
+  "vo7_end": 20.35,
+  "vo8": 28.39,
+  "vo8_end": 31.46,
+  "vo10": 41.3,
+  "vo10_end": 45.65,
+  "vo10b": 50.42,
+  "vo10b_end": 54.65,
+  "vo15a": 95.41,
+  "vo15a_end": 99.1,
+  "vo15b": 102.0,
+  "vo15b_end": 106.27,
+  "vo16": 111.29,
+  "vo16_end": 112.9,
+  "s6_three": 0.82,
+  "s6_first": 3.88,
+  "s7_form": 8.74,
+  "s7_pharm": 9.52,
+  "s7_copay": 10.72,
+  "s7_locked": 17.58,
+  "s8_arrow1": 21.87,
+  "s8_arrow2": 23.95,
+  "s8_dec": 29.39,
+  "s9_step1": 32.6,
+  "s9_step2": 34.78,
+  "s9_step3": 39.559,
+  "s10_apply": 43.16,
+  "s10_back": 45.65,
+  "s10_check1": 49.41,
+  "s10_check2": 52.68,
+  "s11_flip": 55.13,
+  "s11_first": 59.21,
+  "s12_no": 65.17,
+  "s12_year": 70.95,
+  "s12_health": 72.43,
+  "s13_bday": 80.09,
+  "s13_work": 81.209,
+  "s13_not": 82.23,
+  "s14_letter": 86.13,
+  "s14_term": 87.93,
+  "s14_tech": 91.25,
+  "s15_feb": 98.41,
+  "s15_still": 99.1,
+  "s15_dec": 102.78,
+  "s16_partd": 110.43,
+  "s16_ma": 111.97,
+  "s16_hard": 114.02,
+  "s16_back": 112.9,
+  "s16_clock": 116.2,
+  "s17_partd": 121.56,
+  "s17_ma": 122.76,
+  "s17_gap": 124.82,
+  "s17_call": 126.1,
+  "s17_visit": 129.8,
+  "s18_sub": 133.25,
+  "s18_share": 136.25,
+  "s7_lock": 18.73,
+  "live": 117.65
  },
  "block": [
   {
@@ -214,100 +306,138 @@
    "s": 100
   },
   {
-   "t": 1.02,
+   "t": 0.82,
    "x": 0.5,
    "s": 100
   },
   {
-   "t": 1.42,
+   "t": 1.22,
    "x": 0.25,
    "s": 100,
-   "ease": true
+   "ease": "inout"
   },
   {
-   "t": 8.700000000000001,
-   "x": 0.23,
+   "t": 8.36,
+   "x": 0.22,
    "s": 118
   },
   {
-   "t": 21.390000000000004,
+   "t": 20.35,
    "x": 0.25,
    "s": 100
   },
   {
-   "t": 32.370000000000005,
+   "t": 31.46,
    "x": 0.25,
    "s": 100
   },
   {
-   "t": 46.71,
-   "x": 0.225,
+   "t": 45.65,
+   "x": 0.215,
    "s": 120
   },
   {
-   "t": 55.230000000000004,
+   "t": 54.650000000000006,
    "x": 0.25,
    "s": 100
   },
   {
-   "t": 55.8,
+   "t": 55.13,
    "x": 0.25,
    "s": 100
   },
   {
-   "t": 56.3,
+   "t": 55.46333333333334,
    "x": 0.75,
    "s": 100,
-   "ease": true
+   "ease": "inout"
   },
   {
-   "t": 64.08,
-   "x": 0.775,
+   "t": 63.290000000000006,
+   "x": 0.8,
    "s": 115
   },
   {
-   "t": 74.03,
+   "t": 73.21000000000001,
    "x": 0.75,
    "s": 100
   },
   {
-   "t": 84.03,
+   "t": 83.17000000000002,
    "x": 0.75,
    "s": 100
   },
   {
-   "t": 93.95,
-   "x": 0.785,
+   "t": 93.09000000000002,
+   "x": 0.84,
    "s": 118
   },
   {
-   "t": 103.75,
-   "x": 0.785,
+   "t": 106.27000000000001,
+   "x": 0.84,
    "s": 118
   },
   {
-   "t": 104.25,
+   "t": 106.77000000000001,
    "x": 0.2,
    "s": 92,
-   "ease": true
+   "ease": "inout"
   }
  ],
  "hidden": [
   [
-   17.77,
-   21.39
+   17.28,
+   20.35
   ],
   [
-   29.47,
-   32.37
+   28.39,
+   31.46
   ],
   [
-   42.21,
-   46.71
+   41.3,
+   45.65
   ],
   [
-   113.1,
-   141.39
+   50.42,
+   54.65
+  ],
+  [
+   95.41,
+   99.1
+  ],
+  [
+   102.0,
+   106.27
+  ],
+  [
+   111.29,
+   112.9
+  ],
+  [
+   116.9,
+   142.18
+  ]
+ ],
+ "idle": [
+  [
+   "Spoken_audio_about_Medigap_policies_20261020200114.mp4",
+   9.2,
+   9.98
+  ],
+  [
+   "Spoken_audio_about_Medigap_policies_20261020200114.mp4",
+   8.95,
+   9.98
+  ],
+  [
+   "Changing_Medicare_Part_D_plan_20261020200242.mp4",
+   0.05,
+   0.88
+  ],
+  [
+   "Spoken_audio_about_Medigap_policies_20261020200114.mp4",
+   8.95,
+   9.98
   ]
  ],
  "music": [
@@ -315,7 +445,7 @@
    "src": "music/a.mp3",
    "at": 0.0,
    "from": 0.0,
-   "until": 55.199999999999996,
+   "until": 54.650000000000006,
    "env": [
     [
      0.0,
@@ -326,63 +456,63 @@
      -26
     ],
     [
-     42.13000000000001,
+     41.22,
      -26
     ],
     [
-     42.21000000000001,
+     41.3,
      -90
     ],
     [
-     44.81000000000001,
+     43.3,
      -90
     ],
     [
-     45.61000000000001,
+     44.099999999999994,
      -28
     ],
     [
-     55.080000000000005,
+     54.50000000000001,
      -28
     ],
     [
-     55.230000000000004,
+     54.650000000000006,
      -90
     ]
    ]
   },
   {
    "src": "music/b.mp3",
-   "at": 59.730000000000004,
+   "at": 59.06,
    "from": null,
-   "until": 141.39,
+   "until": 142.18,
    "env": [
     [
-     59.730000000000004,
+     59.06,
      -60
     ],
     [
-     59.93000000000001,
+     59.260000000000005,
      -26
     ],
     [
-     112.8,
+     116.60000000000001,
      -26
     ],
     [
-     114.3,
+     118.10000000000001,
      -22
     ],
     [
-     129.8,
+     132.01,
      -23
     ],
     [
-     137.39,
+     138.18,
      -23
     ],
     [
-     141.39,
+     142.18,
      -30
     ]
    ]
@@ -396,295 +526,319 @@
    "pitch": 0
   },
   {
-   "t": 1.07,
+   "t": 0.87,
    "name": "whoosh",
    "db": -4,
    "pitch": 0
   },
   {
-   "t": 1.57,
+   "t": 1.37,
    "name": "tick",
    "db": -4,
    "pitch": 0
   },
   {
-   "t": 1.74,
+   "t": 1.54,
    "name": "tick",
    "db": -4,
    "pitch": 1
   },
   {
-   "t": 1.91,
+   "t": 1.71,
    "name": "tick",
    "db": -4,
    "pitch": 2
   },
   {
-   "t": 4.08,
+   "t": 3.88,
    "name": "cardpop",
    "db": -4,
    "pitch": 0
   },
   {
-   "t": 9.29,
+   "t": 8.74,
    "name": "pop",
    "db": -6,
    "pitch": 0
   },
   {
-   "t": 10.07,
+   "t": 9.52,
    "name": "pop",
    "db": -6,
    "pitch": 2
   },
   {
-   "t": 11.27,
+   "t": 10.72,
    "name": "pop",
    "db": -6,
    "pitch": 4
   },
   {
-   "t": 17.82,
+   "t": 17.28,
    "name": "whoosh",
    "db": -6,
    "pitch": -2
   },
   {
-   "t": 18.12,
+   "t": 17.48,
    "name": "counter",
    "db": -8,
    "pitch": 0
   },
   {
-   "t": 18.19,
+   "t": 18.73,
    "name": "padlock",
    "db": -3,
    "pitch": 0
   },
   {
-   "t": 21.39,
+   "t": 20.35,
    "name": "snap",
    "db": -4,
    "pitch": 0
   },
   {
-   "t": 22.97,
+   "t": 21.87,
    "name": "swish",
    "db": -6,
    "pitch": 0
   },
   {
-   "t": 25.05,
+   "t": 23.95,
    "name": "swish",
    "db": -6,
    "pitch": 2
   },
   {
-   "t": 29.52,
+   "t": 28.39,
    "name": "whoosh",
    "db": -6,
    "pitch": -2
   },
   {
-   "t": 30.53,
+   "t": 29.39,
    "name": "stamp",
    "db": -2,
    "pitch": 0
   },
   {
-   "t": 32.37,
+   "t": 31.46,
    "name": "snap",
    "db": -4,
    "pitch": 0
   },
   {
-   "t": 33.53,
+   "t": 32.6,
    "name": "pop",
    "db": -5,
    "pitch": -4
   },
   {
-   "t": 35.71,
+   "t": 34.78,
    "name": "pop",
    "db": -5,
    "pitch": 0
   },
   {
-   "t": 40.489,
+   "t": 39.559,
    "name": "pop",
    "db": -5,
    "pitch": 4
   },
   {
-   "t": 43.94,
+   "t": 43.11,
    "name": "chime",
    "db": -6,
    "pitch": 0
   },
   {
-   "t": 44.14,
+   "t": 43.31,
    "name": "marker",
    "db": -6,
    "pitch": 0
   },
   {
-   "t": 50.47,
+   "t": 49.41,
    "name": "ding",
    "db": -6,
    "pitch": 0
   },
   {
-   "t": 53.11,
+   "t": 50.42,
+   "name": "whoosh",
+   "db": -7,
+   "pitch": -2
+  },
+  {
+   "t": 52.68,
    "name": "ding",
    "db": -6,
    "pitch": 2
   },
   {
-   "t": 55.75,
+   "t": 55.08,
    "name": "flip",
    "db": -3,
    "pitch": 0
   },
   {
-   "t": 59.88,
+   "t": 59.21,
    "name": "pop",
    "db": -5,
    "pitch": 3
   },
   {
-   "t": 65.98,
+   "t": 65.17,
    "name": "buzz",
    "db": -10,
    "pitch": 0
   },
   {
-   "t": 71.46,
+   "t": 70.65,
    "name": "flutter",
    "db": -8,
    "pitch": 0
   },
   {
-   "t": 73.24,
+   "t": 72.43,
    "name": "pop",
    "db": -6,
    "pitch": 0
   },
   {
-   "t": 74.03,
+   "t": 73.21,
    "name": "snap",
    "db": -4,
    "pitch": 0
   },
   {
-   "t": 80.95,
+   "t": 80.09,
    "name": "marimba",
    "db": -6,
    "pitch": 0
   },
   {
-   "t": 82.069,
+   "t": 81.209,
    "name": "marimba",
    "db": -6,
    "pitch": 3
   },
   {
-   "t": 83.09,
+   "t": 82.23,
    "name": "swipe",
    "db": -5,
    "pitch": 0
   },
   {
-   "t": 84.03,
+   "t": 83.17,
    "name": "snap",
    "db": -4,
    "pitch": 0
   },
   {
-   "t": 86.99,
+   "t": 86.13,
    "name": "envelope",
    "db": -6,
    "pitch": 0
   },
   {
-   "t": 92.31,
+   "t": 91.45,
    "name": "reassure",
    "db": -6,
    "pitch": 0
   },
   {
-   "t": 96.41,
+   "t": 95.41,
+   "name": "whoosh",
+   "db": -7,
+   "pitch": -2
+  },
+  {
+   "t": 95.81,
    "name": "stretch",
    "db": -8,
    "pitch": 0
   },
   {
-   "t": 98.91,
+   "t": 102.0,
+   "name": "whoosh",
+   "db": -7,
+   "pitch": -2
+  },
+  {
+   "t": 102.78,
    "name": "bell",
    "db": -7,
    "pitch": 0
   },
   {
-   "t": 103.8,
+   "t": 106.32,
    "name": "shuffle",
    "db": -5,
    "pitch": 0
   },
   {
-   "t": 108.0,
+   "t": 110.43,
    "name": "ding",
    "db": -9,
    "pitch": 0
   },
   {
-   "t": 108.25,
+   "t": 111.97,
    "name": "ding",
    "db": -9,
    "pitch": 3
   },
   {
-   "t": 112.6,
+   "t": 114.02,
+   "name": "stamp",
+   "db": -8,
+   "pitch": 0
+  },
+  {
+   "t": 116.4,
    "name": "clock",
    "db": -8,
    "pitch": 0
   },
   {
-   "t": 113.2,
+   "t": 117.0,
    "name": "whoosh",
    "db": -6,
    "pitch": 0
   },
   {
-   "t": 117.7,
+   "t": 121.56,
    "name": "pop",
    "db": -6,
    "pitch": 0
   },
   {
-   "t": 119.04,
+   "t": 122.76,
    "name": "pop",
    "db": -6,
    "pitch": 2
   },
   {
-   "t": 121.16,
+   "t": 124.82,
    "name": "pop",
    "db": -6,
    "pitch": 4
   },
   {
-   "t": 122.89,
+   "t": 126.45,
    "name": "keys",
    "db": -9,
    "pitch": 0
   },
   {
-   "t": 127.04,
+   "t": 129.9,
    "name": "click",
    "db": -6,
    "pitch": 0
   },
   {
-   "t": 131.2,
+   "t": 133.25,
    "name": "subbell",
    "db": -6,
    "pitch": 0
