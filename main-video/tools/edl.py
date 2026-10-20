@@ -150,7 +150,6 @@ CUE.update({
     "s18_sub": at(18, "subscribe"), "s18_share": at(18, "share"),
 })
 CUE["s7_lock"] = round(CUE["vo7"] + 1.45, 3)  # padlock lands once the red bar has crossed the year
-CUE["live"] = round(S[17] + 0.75, 3)   # outro circle switches from the pop-in still to live video
 
 # ---- speaker blocking: keyframes of (time, x as fraction of width, scale %) ----
 # Each entry holds until the next; an "ease" keyframe moves from the previous one.
@@ -179,10 +178,6 @@ BLOCK = [
 # and from Scene 17 on the contact card owns the frame.
 HIDDEN = [[p["start"], p["end"]] for p in PIECES if p["kind"] == "vo" and p["scene"] < 17]
 HIDDEN.append([S[17], TOTAL])
-
-# Outro circle: silent, smiling footage of Arric ping-ponged so he stays live
-# while the pickup plays. (clip, in, out); the first starts on the still's frame.
-IDLE = [["flip", 9.20, 9.98], ["flip", 8.95, 9.98], ["partd", 0.05, 0.88], ["flip", 8.95, 9.98]]
 
 # ---- music: two beds, gain envelope in dB (keyframes, linear ramps) ----
 B_START = CUE["s11_first"] - 0.15
@@ -243,7 +238,6 @@ SFX = [
 if __name__ == "__main__":
     tl = {"fps": 30, "width": 1920, "height": 1080, "total": TOTAL,
           "pieces": PIECES, "cues": CUE, "block": BLOCK, "hidden": HIDDEN,
-          "idle": [[C[k], a, b] for k, a, b in IDLE],
           "music": MUSIC, "sfx": [{"t": round(t, 3), "name": n, "db": g, "pitch": p} for t, n, g, p in SFX]}
     json.dump(tl, open(os.path.join(ROOT, "timeline.json"), "w"), indent=1, ensure_ascii=False)
     for k, v in sorted(CUE.items(), key=lambda kv: kv[1]):

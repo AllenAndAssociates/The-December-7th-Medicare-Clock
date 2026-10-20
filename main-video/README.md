@@ -18,7 +18,7 @@ All on-camera audio is Arric's own clip speech converted to his ElevenLabs voice
 | 11–14 | Spoken_audio_about_Medigap_policies, Medicare_supplement_open_enrollm…, Applying_for_Medicare_Part_B, Medicare_Advantage_plan_terminat… | |
 | 15 | Choosing_Medicare_plan_before_De… (two cuts) | "Special Enrollment Period that lasts through the end of February" and "before the end of December, so your coverage starts smoothly on January first" |
 | 16 | Medicare_plan_enrollment_deadline (two cuts) | "or a Medicare Advantage plan" (the board slides to center) |
-| 17–18 | No footage: contact card with silent, smiling footage of Arric looping live in the portrait circle | Call to action and sign-off |
+| 17–18 | No footage: contact card with a still headshot of Arric | Call to action and sign-off |
 
 ## Layout
 - `tools/edl.py`: cut list, word-timed cues (from ElevenLabs Scribe transcripts in `transcripts/`), speaker blocking, music automation, and SFX hits. Writes `timeline.json`.

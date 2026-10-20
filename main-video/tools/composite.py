@@ -3,8 +3,6 @@
 Usage: python3 composite.py graphics.mp4 out_video.mp4 [workers]
 Splits the frame range across worker processes, then concatenates.
 Reads timeline.json for the cut list, blocking keyframes and hidden spans.
-From the "live" cue on, silent footage of Arric (timeline "idle") plays inside
-the contact card's portrait circle.
 """
 import json
 import os
@@ -26,13 +24,6 @@ FPS, W, H = TL["fps"], TL["width"], TL["height"]
 SRC_FPS = 24
 CROP_X, CROP_W = 400, 1120          # the part of the source frame Arric can occupy
 BASE = 0.80                         # "100%" = source scaled to 80%, bottom-anchored
-# Portrait circle on the contact card (matches #por / #por img in the graphics):
-# source crop [0:900, 560:1360] scaled 0.825 with its top-left at (122, 202),
-# masked to the circle inside the gold ring.
-POR_CROP, POR_K, POR_XY = (560, 0, 800, 900), 0.825, (122, 202)
-POR_C, POR_R = (450, 450), 288
-
-
 def ease(u, kind):
     if kind == "inout":
         return 4 * u ** 3 if u < .5 else 1 - (-2 * u + 2) ** 3 / 2
@@ -101,51 +92,6 @@ class ClipReader:
         self.proc.kill()
 
 
-class Idle:
-    """Ping-pong loop of silent footage for the portrait circle."""
-
-    def __init__(self):
-        x, y, w, h = POR_CROP
-        self.segs = []
-        head_cx = None
-        for src, a, b in TL["idle"]:
-            raw = subprocess.run(["ffmpeg", "-nostdin", "-v", "error", "-ss", f"{a:.3f}", "-i", os.path.join(REPO, src),
-                                  "-t", f"{b - a:.3f}", "-vf", f"crop={w}:{h}:{x}:{y}", "-f", "rawvideo", "-pix_fmt", "rgb24", "-"],
-                                 capture_output=True, check=True).stdout
-            frames = np.frombuffer(raw, np.uint8).reshape(-1, h, w, 3)
-            keyed = [key(f) for f in frames]
-            # line every clip's head up with the first one (the still it replaces)
-            al = keyed[0][:500, :, 3].astype(np.float32)
-            cx = float((al.sum(0) * np.arange(w)).sum() / max(al.sum(), 1))
-            head_cx = cx if head_cx is None else head_cx
-            dx = int(round(head_cx - cx))
-            sw, sh = int(round(w * POR_K)), int(round(h * POR_K))
-            sprites = [np.asarray(Image.fromarray(np.roll(f, dx, axis=1)).resize((sw, sh), Image.BILINEAR)) for f in keyed]
-            self.segs.append(sprites)
-        # play order: each segment forward then back; the first segment twice more
-        # so the familiar shot dominates and the cut to another clip is rare
-        order = []
-        for i, seg in enumerate(self.segs):
-            reps = 3 if i == 0 else 1
-            for _ in range(reps):
-                order += seg + seg[::-1]
-        self.order = order
-        yy, xx = np.mgrid[0:H, 0:W]
-        d = np.sqrt((xx - POR_C[0]) ** 2 + (yy - POR_C[1]) ** 2)
-        self.mask = np.clip(POR_R + 0.5 - d, 0, 1).astype(np.float32)
-
-    def draw(self, bg, t):
-        n = int((t - TL["cues"]["live"]) * SRC_FPS)
-        spr = self.order[n % len(self.order)]
-        x0, y0 = POR_XY
-        sh, sw = spr.shape[:2]
-        x1, y1 = min(x0 + sw, W), min(y0 + sh, H)
-        sp = spr[:y1 - y0, :x1 - x0]
-        a = sp[..., 3:4].astype(np.float32) / 255.0 * self.mask[y0:y1, x0:x1, None]
-        region = bg[y0:y1, x0:x1].astype(np.float32)
-        bg[y0:y1, x0:x1] = (sp[..., :3] * a + region * (1 - a) + 0.5).astype(np.uint8)
-
-
 def render_range(args):
     gfx_path, out_path, f0, f1 = args
     clips = [p for p in TL["pieces"] if p["kind"] == "clip"]
@@ -156,7 +102,6 @@ def render_range(args):
                             "-r", str(FPS), "-i", "-", "-c:v", "libx264", "-preset", "medium", "-crf", "17",
                             "-pix_fmt", "yuv420p", "-movflags", "+faststart", out_path], stdin=subprocess.PIPE)
     reader, last = None, None
-    idle = Idle() if f1 / FPS > TL["cues"]["live"] else None
     for n in range(f0, f1):
         t = n / FPS
         buf = gfx.stdout.read(W * H * 3)
@@ -164,8 +109,6 @@ def render_range(args):
             last = buf
         bg = np.frombuffer(last, np.uint8).reshape(H, W, 3).copy()
         piece = next((p for p in clips if p["start"] <= t < p["end"]), None)
-        if idle is not None and t >= TL["cues"]["live"]:
-            idle.draw(bg, t)
         if piece is not None and visible(t):
             if reader is None or reader.piece is not piece:
                 if reader:
