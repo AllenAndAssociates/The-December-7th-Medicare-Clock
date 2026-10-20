@@ -1,2 +1,4 @@
 build/
 graphics/renders/
+__pycache__/
+graphics/.hyperframes/
