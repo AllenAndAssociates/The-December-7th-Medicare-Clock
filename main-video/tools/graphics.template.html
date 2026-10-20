@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="en" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root { --canvas: #F4F4F0; --red: #D93829; --green: #1E8E5A; --gold: #F5A623; --navy: #14213D; --ink: #1B1F2A; --mute: #5B6170; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--canvas); }
+      #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; background: var(--canvas);
+        font-family: Inter, ui-sans-serif, system-ui, sans-serif; color: var(--ink); perspective: 2400px; }
+      .abs { position: absolute; }
+      svg { display: block; }
+      #grain { left: 0; top: 0; width: 1920px; height: 1080px; opacity: .55; z-index: 0; }
+      #shade { left: 0; top: 0; width: 1920px; height: 1080px; z-index: 1;
+        background: radial-gradient(ellipse at 50% 45%, rgba(255,255,255,0) 55%, rgba(60,55,40,.10) 100%); }
+
+      /* ---------- header bars ---------- */
+      .hdr { top: 52px; height: 84px; width: 1100px; border-radius: 14px; color: #fff; z-index: 40; opacity: 0;
+        display: flex; align-items: center; gap: 22px; padding: 0 30px; font-size: 42px; font-weight: 800; letter-spacing: .035em;
+        box-shadow: 0 10px 26px rgba(20,33,61,.16); }
+      .hdr svg { width: 48px; height: 48px; flex: none; }
+      #hdr2 { left: 780px; background: var(--red); }
+      #hdr3 { left: 40px; background: var(--green); font-size: 38px; }
+
+      /* ---------- rail slots ---------- */
+      .slot { width: 240px; height: 130px; border-radius: 18px; z-index: 20; opacity: 0; }
+      .slot .empty { position: absolute; inset: 0; border-radius: 18px; border: 4px dashed; display: flex; align-items: center; justify-content: center;
+        font-size: 64px; font-weight: 800; }
+      .slot .full { position: absolute; inset: 0; border-radius: 18px; background: #fff; opacity: 0; display: flex; align-items: center; gap: 14px; padding: 0 16px;
+        box-shadow: 0 8px 22px rgba(20,33,61,.12); overflow: hidden; }
+      .slot .full .n { flex: none; width: 58px; height: 58px; border-radius: 29px; color: #fff; font-size: 32px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+      .slot .full .l { font-size: 24px; font-weight: 800; line-height: 1.12; }
+      .r2 .empty { border-color: rgba(217,56,41,.55); color: rgba(217,56,41,.55); }
+      .r2 .full { border-left: 10px solid var(--red); } .r2 .full .n { background: var(--red); }
+      .r3 .empty { border-color: rgba(30,142,90,.55); color: rgba(30,142,90,.55); width: 260px; }
+      .r3 .full { border-left: 10px solid var(--green); width: 260px; } .r3 .full .n { background: var(--green); }
+      .r2 { left: 1640px; } .r3 { left: 40px; width: 260px; }
+      .y1 { top: 176px; } .y2 { top: 326px; } .y3 { top: 476px; }
+
+      /* ---------- main cards ---------- */
+      .card { top: 176px; height: 840px; border-radius: 26px; background: #fff; z-index: 25; opacity: 0; overflow: hidden;
+        box-shadow: 0 22px 50px rgba(20,33,61,.16); }
+      .card .bar { position: absolute; left: 0; top: 0; right: 0; height: 12px; }
+      .c2 { left: 820px; width: 790px; } .c2 .bar { background: var(--red); }
+      .c3 { left: 340px; width: 770px; } .c3 .bar { background: var(--green); }
+      .card .num { position: absolute; left: 44px; top: 50px; width: 92px; height: 92px; border-radius: 46px; color: #fff; font-size: 50px; font-weight: 900;
+        display: flex; align-items: center; justify-content: center; }
+      .c2 .num { background: var(--red); } .c3 .num { background: var(--green); }
+      .card .title { position: absolute; left: 160px; right: 40px; top: 46px; font-size: 48px; font-weight: 800; line-height: 1.08; letter-spacing: -.01em; }
+      .tag { position: absolute; height: 74px; padding: 0 30px; border-radius: 37px; font-size: 32px; font-weight: 800; display: flex; align-items: center; opacity: 0; }
+      .tag.red { border: 4px solid var(--red); color: var(--red); background: #fff; }
+      .tag.green { border: 4px solid var(--green); color: var(--green); background: #fff; }
+
+      /* card R1 */
+      #pill { left: 255px; top: 230px; width: 280px; height: 330px; }
+      #t1 { left: 50px; top: 640px; } #t2 { left: 300px; top: 640px; } #t3 { left: 552px; top: 640px; }
+      /* card R2 */
+      .arow { position: absolute; left: 44px; width: 702px; height: 150px; display: flex; align-items: center; gap: 20px; opacity: 0; }
+      .arow .box { flex: 1; height: 120px; border-radius: 18px; background: #F7F3F2; border: 3px solid rgba(217,56,41,.25); display: flex; align-items: center; justify-content: center;
+        text-align: center; font-size: 30px; font-weight: 800; line-height: 1.1; padding: 0 12px; }
+      .arow .box.to { background: var(--red); color: #fff; border-color: var(--red); }
+      .arow svg { width: 72px; height: 48px; flex: none; }
+      #ar1 { top: 230px; } #ar2 { top: 420px; }
+      #r2badge { left: 44px; top: 640px; width: 702px; height: 120px; border-radius: 18px; background: var(--navy); color: #fff; opacity: 0;
+        display: flex; align-items: center; justify-content: center; gap: 22px; font-size: 34px; font-weight: 800; }
+      #r2badge b { color: #FFB4A8; } #r2badge i { font-style: normal; color: #8EE0B6; }
+      /* card R3 flowchart */
+      .fl { position: absolute; top: 260px; width: 216px; height: 420px; border-radius: 22px; background: #FAF7F6; border: 3px solid rgba(20,33,61,.10);
+        display: flex; flex-direction: column; align-items: center; padding-top: 34px; text-align: center; opacity: 0; }
+      .fl svg { width: 120px; height: 120px; }
+      .fl .k { margin-top: 26px; font-size: 29px; font-weight: 800; line-height: 1.15; padding: 0 14px; }
+      .fl .s { position: absolute; top: -22px; left: 74px; width: 64px; height: 44px; border-radius: 22px; background: var(--navy); color: #fff; font-size: 24px; font-weight: 800;
+        display: flex; align-items: center; justify-content: center; }
+      #f1 { left: 44px; } #f2 { left: 287px; } #f3 { left: 530px; }
+      .farr { position: absolute; top: 445px; width: 30px; height: 50px; opacity: 0; }
+      #fa1 { left: 262px; } #fa2 { left: 505px; }
+      /* tip card (scene 10) */
+      #tip .gold { position: absolute; left: 0; top: 0; width: 790px; height: 130px; background: var(--gold); color: var(--navy); font-size: 40px; font-weight: 900;
+        letter-spacing: .02em; display: flex; align-items: center; justify-content: center; text-align: center; line-height: 1.05; padding: 0 30px; }
+      #tip .sh { position: absolute; left: 44px; top: 180px; width: 702px; height: 200px; border-radius: 22px; background: #FFF8EA; border: 4px solid var(--gold);
+        display: flex; align-items: center; gap: 30px; padding: 0 36px; font-size: 36px; font-weight: 800; line-height: 1.12; }
+      #tip .sh svg { width: 120px; height: 120px; flex: none; }
+      .chk { position: absolute; left: 44px; width: 702px; height: 170px; border-radius: 20px; background: #F6F7F9; display: flex; align-items: center; gap: 26px; padding: 0 30px;
+        font-size: 32px; font-weight: 800; line-height: 1.15; opacity: 0; }
+      .chk .bx { flex: none; width: 76px; height: 76px; border-radius: 14px; border: 5px solid var(--navy); position: relative; background: #fff; }
+      .chk .bx svg { position: absolute; left: -2px; top: -8px; width: 82px; height: 82px; }
+      .chk small { display: block; font-size: 22px; font-weight: 800; color: var(--mute); letter-spacing: .08em; margin-bottom: 6px; }
+      #k1 { top: 420px; } #k2 { top: 615px; }
+
+      /* ---------- green cards ---------- */
+      #g1wheel { left: 225px; top: 300px; width: 320px; height: 320px; opacity: 0; }
+      #g1fall { left: 120px; top: 190px; width: 530px; height: 84px; border-radius: 42px; background: #FBEDEB; color: var(--red); font-size: 32px; font-weight: 800;
+        display: flex; align-items: center; justify-content: center; opacity: 0; }
+      #g1fall .x { position: absolute; left: 20px; right: 20px; top: 39px; height: 7px; border-radius: 4px; background: var(--red); transform-origin: left center; }
+      #g1365 { left: 85px; top: 636px; width: 600px; text-align: center; font-size: 36px; white-space: nowrap; font-weight: 900; color: var(--green); opacity: 0; }
+      #g1note { left: 105px; top: 712px; width: 560px; height: 80px; border-radius: 40px; background: var(--navy); color: #fff; font-size: 28px; font-weight: 800;
+        display: flex; align-items: center; justify-content: center; gap: 14px; opacity: 0; }
+      .ico2 { position: absolute; top: 250px; width: 320px; height: 400px; border-radius: 24px; background: #EFF7F2; display: flex; flex-direction: column; align-items: center;
+        padding-top: 40px; text-align: center; opacity: 0; }
+      .ico2 svg { width: 170px; height: 170px; }
+      .ico2 .k { margin-top: 30px; font-size: 32px; font-weight: 800; line-height: 1.15; padding: 0 20px; color: var(--green); }
+      #cake { left: 50px; } #case { left: 400px; }
+      #dec7 { left: 255px; top: 690px; width: 260px; height: 90px; border-radius: 45px; background: var(--red); color: #fff; font-size: 38px; font-weight: 900;
+        display: flex; align-items: center; justify-content: center; letter-spacing: .02em; opacity: 0; }
+      #dec7 .x { position: absolute; left: 22px; right: 22px; top: 42px; height: 7px; background: #fff; border-radius: 4px; transform-origin: left center; }
+      /* card G3 */
+      #env { left: 60px; top: 240px; width: 300px; height: 300px; opacity: 0; }
+      #notice { left: 380px; top: 255px; width: 340px; height: 260px; border-radius: 16px; background: #FBFAF6; border: 3px solid rgba(20,33,61,.15);
+        box-shadow: 0 10px 24px rgba(20,33,61,.12); opacity: 0; overflow: hidden; }
+      #notice .ln { position: absolute; left: 28px; height: 12px; border-radius: 6px; background: rgba(20,33,61,.12); }
+      #nstamp { left: 400px; top: 340px; width: 300px; height: 96px; border: 7px solid var(--red); border-radius: 12px; color: var(--red); font-size: 32px; font-weight: 900;
+        display: flex; align-items: center; justify-content: center; text-align: center; line-height: 1.0; transform: rotate(-8deg); opacity: 0; letter-spacing: .02em; background: rgba(255,255,255,.85); }
+      #nohard { left: 105px; top: 590px; width: 560px; height: 90px; border-radius: 45px; background: var(--green); color: #fff; font-size: 34px; font-weight: 900;
+        display: flex; align-items: center; justify-content: center; gap: 14px; opacity: 0; }
+      #sep { left: 40px; top: 230px; width: 690px; height: 560px; opacity: 0; }
+      #sep .track { position: absolute; left: 80px; top: 210px; width: 560px; height: 28px; border-radius: 14px; background: #E6EAE8; }
+      #sep .fill { position: absolute; left: 80px; top: 210px; width: 560px; height: 28px; border-radius: 14px; background: var(--green); transform-origin: left center; }
+      #sep .mk { position: absolute; top: 258px; width: 180px; text-align: center; font-size: 30px; font-weight: 900; color: var(--navy); }
+      #sep .mk small { display: block; font-size: 22px; color: var(--mute); font-weight: 800; letter-spacing: .06em; }
+      #sep .dot { position: absolute; top: 204px; width: 40px; height: 40px; border-radius: 20px; background: #fff; border: 7px solid var(--green); }
+      #sep .lab { position: absolute; left: 30px; top: 100px; width: 630px; text-align: center; font-size: 34px; font-weight: 900; color: var(--green); }
+      #star { left: 34px; top: 380px; width: 240px; height: 120px; opacity: 0; }
+      #best { left: 30px; top: 390px; width: 630px; height: 150px; border-radius: 22px; background: #FFF6E4; border: 4px solid var(--gold); opacity: 0;
+        display: flex; align-items: center; gap: 22px; padding: 0 26px; }
+      #best svg { width: 86px; height: 86px; flex: none; }
+      #best .t { font-size: 29px; font-weight: 800; line-height: 1.2; color: var(--navy); }
+      #best .t b { color: #B86E00; letter-spacing: .04em; }
+
+      /* ---------- cutaways (full frame) ---------- */
+      .cut { left: 0; top: 0; width: 1920px; height: 1080px; z-index: 60; opacity: 0; background: var(--canvas); overflow: hidden; }
+      .cut .kick { position: absolute; left: 0; width: 1920px; top: 120px; text-align: center; font-size: 34px; font-weight: 800; letter-spacing: .2em; }
+      .cut .big { position: absolute; left: 0; width: 1920px; text-align: center; font-size: 84px; font-weight: 900; letter-spacing: -.015em; color: var(--navy); }
+      /* calendar lock-in */
+      #cal { left: 150px; top: 420px; width: 1620px; height: 150px; }
+      #cal .m { position: absolute; top: 0; width: 124px; height: 150px; border-radius: 16px; background: #fff; box-shadow: 0 8px 20px rgba(20,33,61,.10);
+        display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 30px; font-weight: 900; color: var(--navy); }
+      #cal .m small { font-size: 18px; color: var(--mute); font-weight: 800; letter-spacing: .1em; }
+      #calbar { left: 150px; top: 610px; width: 1620px; height: 30px; border-radius: 15px; background: var(--red); transform-origin: left center; }
+      #lock { left: 830px; top: 330px; width: 260px; height: 300px; opacity: 0; filter: drop-shadow(0 18px 30px rgba(20,33,61,.35)); }
+      #lockcap { top: 700px; } #lockcap span { color: var(--red); }
+      /* dec 7 -> jan 1 */
+      .dblk { position: absolute; top: 340px; width: 520px; height: 330px; border-radius: 28px; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0;
+        box-shadow: 0 20px 44px rgba(20,33,61,.22); }
+      .dblk .d { font-size: 140px; font-weight: 900; letter-spacing: -.02em; line-height: 1; }
+      .dblk .l { margin-top: 16px; font-size: 36px; font-weight: 800; letter-spacing: .14em; }
+      #dDec { left: 300px; background: var(--red); } #dJan { left: 1100px; background: var(--green); }
+      #darr { left: 870px; top: 455px; width: 180px; height: 100px; opacity: 0; }
+      #dstamp { left: 380px; top: 690px; width: 360px; height: 100px; border: 8px solid var(--red); border-radius: 14px; color: var(--red); font-size: 50px; font-weight: 900;
+        display: flex; align-items: center; justify-content: center; transform: rotate(-6deg); opacity: 0; letter-spacing: .06em; }
+      /* insider tip zoom */
+      #dim { left: 0; top: 0; width: 1920px; height: 1080px; z-index: 55; background: rgba(20,33,61,.55); opacity: 0; }
+      #zoombox { left: 460px; top: 300px; width: 1000px; height: 560px; z-index: 61; opacity: 0; border-radius: 30px; background: #fff; overflow: hidden;
+        box-shadow: 0 30px 70px rgba(0,0,0,.35); }
+      #zoombox .gold { position: absolute; left: 0; top: 0; width: 1000px; height: 150px; background: var(--gold); color: var(--navy); font-size: 46px; white-space: nowrap; font-weight: 900;
+        display: flex; align-items: center; justify-content: center; letter-spacing: .02em; transform-origin: left center; }
+      #zoombox .hl { position: absolute; left: 330px; top: 322px; width: 560px; height: 64px; background: rgba(245,166,35,.45); border-radius: 8px; transform-origin: left center; }
+      #zoombox svg { position: absolute; left: 80px; top: 230px; width: 220px; height: 220px; }
+      #zoombox .k { position: absolute; left: 340px; top: 250px; width: 600px; font-size: 56px; font-weight: 900; line-height: 1.12; color: var(--navy); }
+
+      /* ---------- master board (scene 16) ---------- */
+      .col { top: 150px; width: 585px; height: 870px; border-radius: 26px; background: #fff; z-index: 30; opacity: 0; overflow: hidden; box-shadow: 0 22px 50px rgba(20,33,61,.14); }
+      #colR { left: 680px; } #colG { left: 1295px; }
+      .col .h { height: 120px; color: #fff; font-size: 44px; font-weight: 900; letter-spacing: .04em; display: flex; align-items: center; justify-content: center; gap: 18px; }
+      .col .h svg { width: 52px; height: 52px; }
+      #colR .h { background: var(--red); } #colG .h { background: var(--green); }
+      .it { position: absolute; left: 30px; width: 525px; height: 200px; border-radius: 20px; display: flex; align-items: center; gap: 22px; padding: 0 26px; opacity: 0;
+        font-size: 34px; font-weight: 800; line-height: 1.12; }
+      .it .n { flex: none; width: 70px; height: 70px; border-radius: 35px; color: #fff; font-size: 38px; font-weight: 900; display: flex; align-items: center; justify-content: center; }
+      #colR .it { background: #FBEFED; } #colR .it .n { background: var(--red); }
+      #colG .it { background: #EAF5EF; } #colG .it .n { background: var(--green); }
+      .i1 { top: 160px; } .i2 { top: 390px; } .i3 { top: 620px; }
+      .it .glow { position: absolute; inset: -5px; border-radius: 24px; border: 6px solid var(--red); opacity: 0; }
+      #bclock { left: 1520px; top: 40px; width: 110px; height: 110px; z-index: 31; opacity: 0; }
+
+      /* ---------- contact card (scenes 17-18) ---------- */
+      #cta { left: 0; top: 0; width: 1920px; height: 1080px; z-index: 70; opacity: 0; background: var(--canvas); overflow: hidden; }
+      #por { position: absolute; left: 150px; top: 150px; width: 600px; height: 600px; border-radius: 300px; background: linear-gradient(160deg, #1E3157, var(--navy));
+        border: 12px solid var(--gold); overflow: hidden; box-shadow: 0 24px 60px rgba(20,33,61,.3); }
+      #por img { position: absolute; left: -40px; top: 40px; width: 660px; height: auto; }
+      #plogo { position: absolute; left: 160px; top: 800px; width: 580px; height: 180px; border-radius: 26px; background: #fff; display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 14px 34px rgba(20,33,61,.12); }
+      #plogo img { width: 500px; height: auto; }
+      #acard { position: absolute; left: 860px; top: 110px; width: 960px; height: 870px; border-radius: 30px; background: var(--navy); color: #fff; overflow: hidden;
+        box-shadow: 0 30px 70px rgba(20,33,61,.35); }
+      #acard .top { position: absolute; left: 0; top: 0; width: 960px; height: 14px; background: var(--gold); }
+      #acard .nm { position: absolute; left: 64px; top: 70px; font-size: 64px; font-weight: 900; letter-spacing: .03em; }
+      #acard .since { position: absolute; left: 66px; top: 160px; font-size: 30px; font-weight: 600; color: #C9D3E8; }
+      #acard .rule { position: absolute; left: 66px; top: 222px; width: 120px; height: 6px; border-radius: 3px; background: var(--gold); }
+      .svc { position: absolute; top: 262px; height: 66px; padding: 0 26px; border-radius: 33px; border: 3px solid var(--gold); color: var(--gold); font-size: 27px; font-weight: 800;
+        display: flex; align-items: center; opacity: 0; }
+      #sv1 { left: 64px; } #sv2 { left: 240px; } #sv3 { left: 592px; }
+      #phone { position: absolute; left: 64px; top: 390px; display: flex; align-items: center; gap: 26px; }
+      #phone svg { width: 100px; height: 100px; flex: none; opacity: 0; }
+      #pnum { font-size: 98px; font-weight: 900; letter-spacing: -.01em; white-space: nowrap; }
+      #pnum span { opacity: 0; }
+      #web { position: absolute; left: 64px; top: 560px; height: 100px; padding: 0 40px 0 26px; border-radius: 50px; background: rgba(255,255,255,.08); border: 3px solid rgba(245,166,35,.6);
+        color: #fff; font-size: 46px; font-weight: 800; display: flex; align-items: center; gap: 20px; opacity: 0; }
+      #web svg { width: 56px; height: 56px; }
+      .btn { position: absolute; top: 720px; height: 96px; border-radius: 48px; font-size: 38px; font-weight: 900; display: flex; align-items: center; gap: 16px; padding: 0 40px; opacity: 0; }
+      .btn svg { width: 44px; height: 44px; }
+      #bsub { left: 64px; background: #E62117; color: #fff; }
+      #bshare { left: 410px; background: #fff; color: var(--navy); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="__TOTAL__" data-width="1920" data-height="1080">
+      <svg id="grain" class="abs" viewBox="0 0 1920 1080"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" stitchTiles="stitch"/>
+        <feColorMatrix values="0 0 0 0 .35  0 0 0 0 .33  0 0 0 0 .28  0 0 0 .09 0"/></filter><rect width="1920" height="1080" filter="url(#n)"/></svg>
+      <div id="shade" class="abs"></div>
+
+      <!-- ===== PART 2: MUST DO BY DEC 7 ===== -->
+      <div id="p2">
+        <div id="hdr2" class="hdr abs"><svg viewBox="0 0 48 48"><rect x="5" y="9" width="38" height="34" rx="5" fill="none" stroke="#fff" stroke-width="4"/><path d="M5 19h38M15 4v9M33 4v9" stroke="#fff" stroke-width="4" stroke-linecap="round"/><path d="M17 30l5 5 9-10" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/></svg>MUST DO BY DECEMBER 7TH</div>
+        <div id="rs1" class="slot r2 y1 abs"><div class="empty">1</div><div class="full"><div class="n">1</div><div class="l">Change<br/>Part D Plan</div></div></div>
+        <div id="rs2" class="slot r2 y2 abs"><div class="empty">2</div><div class="full"><div class="n">2</div><div class="l">Switch or Join<br/>Advantage</div></div></div>
+        <div id="rs3" class="slot r2 y3 abs"><div class="empty">3</div><div class="full"><div class="n">3</div><div class="l">Advantage ➔<br/>Medigap + D</div></div></div>
+
+        <div id="cR1" class="card c2 abs"><div class="bar"></div><div class="num">1</div><div class="title">Change Standalone Part&nbsp;D Drug Plan</div>
+          <svg id="pill" class="abs" viewBox="0 0 280 330"><rect x="40" y="10" width="200" height="62" rx="14" fill="#D93829"/><rect x="28" y="66" width="224" height="250" rx="34" fill="#F7B48D" opacity=".35"/>
+            <rect x="28" y="66" width="224" height="250" rx="34" fill="none" stroke="#14213D" stroke-width="10"/><rect x="60" y="140" width="160" height="110" rx="12" fill="#fff" stroke="#14213D" stroke-width="7"/>
+            <path d="M100 195h80M140 160v70" stroke="#D93829" stroke-width="16" stroke-linecap="round"/></svg>
+          <div id="t1" class="tag red abs">Formularies</div><div id="t2" class="tag red abs">Pharmacies</div><div id="t3" class="tag red abs">Copays</div>
+        </div>
+
+        <div id="cR2" class="card c2 abs"><div class="bar"></div><div class="num">2</div><div class="title">Switch or Join Medicare Advantage</div>
+          <div id="ar1" class="arow"><div class="box">Advantage<br/>Plan A</div><svg viewBox="0 0 72 48"><path d="M4 24h56M44 8l18 16-18 16" fill="none" stroke="#D93829" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="box to">Advantage<br/>Plan B</div></div>
+          <div id="ar2" class="arow"><div class="box">Original<br/>Medicare</div><svg viewBox="0 0 72 48"><path d="M4 24h56M44 8l18 16-18 16" fill="none" stroke="#D93829" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="box to">Medicare<br/>Advantage</div></div>
+          <div id="r2badge" class="abs"><b>Dec 7 Deadline</b> ➔ <i>Jan 1 Coverage Start</i></div>
+        </div>
+
+        <div id="cR3" class="card c2 abs"><div class="bar"></div><div class="num">3</div><div class="title">Leave Advantage for Medigap + Part&nbsp;D</div>
+          <div id="f1" class="fl"><div class="s">1</div><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="54" fill="#D93829"/><path d="M38 38l44 44M82 38L38 82" stroke="#fff" stroke-width="13" stroke-linecap="round"/></svg><div class="k">Leave Medicare Advantage</div></div>
+          <svg id="fa1" class="farr" viewBox="0 0 30 50"><path d="M4 6l20 19-20 19" fill="none" stroke="#14213D" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div id="f2" class="fl"><div class="s">2</div><svg viewBox="0 0 120 120"><path d="M60 6l46 16v34c0 30-20 50-46 60C34 106 14 86 14 56V22z" fill="#14213D"/><path d="M40 60l14 14 28-30" fill="none" stroke="#F5A623" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="k">Original Medicare + Medigap Supplement</div></div>
+          <svg id="fa2" class="farr" viewBox="0 0 30 50"><path d="M4 6l20 19-20 19" fill="none" stroke="#14213D" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div id="f3" class="fl"><div class="s">3</div><svg viewBox="0 0 120 120"><g transform="rotate(-40 60 60)"><rect x="16" y="38" width="88" height="44" rx="22" fill="#fff" stroke="#14213D" stroke-width="7"/><path d="M60 41.5h22a18.5 18.5 0 0 1 0 37H60z" fill="#D93829"/><path d="M60 38v44" stroke="#14213D" stroke-width="7"/></g></svg><div class="k">+ Standalone Part&nbsp;D Plan</div></div>
+        </div>
+
+        <div id="tip" class="card c2 abs"><div class="gold">INSIDER TIP:<br/>APPLY FOR MEDIGAP FIRST</div>
+          <div class="sh"><svg viewBox="0 0 120 120"><path d="M60 6l46 16v34c0 30-20 50-46 60C34 106 14 86 14 56V22z" fill="#14213D"/><path d="M40 60l14 14 28-30" fill="none" stroke="#F5A623" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/></svg>Original Medicare +<br/>Medigap Supplement</div>
+          <div id="k1" class="chk"><div class="bx"><svg id="ck1" viewBox="0 0 82 82"><path d="M14 44l18 18 40-46" fill="none" stroke="#1E8E5A" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg></div><div><small>STEP 1</small>Pass Health Questions &amp; Get Approved</div></div>
+          <div id="k2" class="chk"><div class="bx"><svg id="ck2" viewBox="0 0 82 82"><path d="M14 44l18 18 40-46" fill="none" stroke="#1E8E5A" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg></div><div><small>STEP 2</small>Drop Advantage &amp; Add Part D by Dec&nbsp;7</div></div>
+        </div>
+      </div>
+
+      <!-- ===== PART 3: WHAT CAN WAIT ===== -->
+      <div id="p3">
+        <div id="hdr3" class="hdr abs"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="19" fill="none" stroke="#fff" stroke-width="4"/><path d="M24 13v12l8 5" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>WHAT CAN WAIT (NO DEC 7TH DEADLINE)</div>
+        <div id="gs1" class="slot r3 y1 abs"><div class="empty">1</div><div class="full"><div class="n">1</div><div class="l">Medigap ➔<br/>Medigap</div></div></div>
+        <div id="gs2" class="slot r3 y2 abs"><div class="empty">2</div><div class="full"><div class="n">2</div><div class="l">New Part B /<br/>Retiring</div></div></div>
+        <div id="gs3" class="slot r3 y3 abs"><div class="empty">3</div><div class="full"><div class="n">3</div><div class="l">Terminated<br/>Plan SEP</div></div></div>
+
+        <div id="cG1" class="card c3 abs"><div class="bar"></div><div class="num">1</div><div class="title">Switching Medigap to Medigap</div>
+          <div id="g1fall" class="abs">Annual Fall Window<div class="x"></div></div>
+          <svg id="g1wheel" class="abs" viewBox="0 0 320 320"><g id="wheel"></g><circle cx="160" cy="160" r="70" fill="#fff"/><text x="160" y="152" text-anchor="middle" font-family="Inter" font-weight="900" font-size="52" fill="#1E8E5A">365</text><text x="160" y="188" text-anchor="middle" font-family="Inter" font-weight="800" font-size="22" fill="#5B6170" letter-spacing="2">DAYS</text></svg>
+          <div id="g1365" class="abs">Shop Rates 365 Days a Year</div>
+          <div id="g1note" class="abs"><svg width="34" height="34" viewBox="0 0 34 34"><circle cx="17" cy="17" r="15" fill="#F5A623"/><path d="M17 9v10M17 24v1" stroke="#14213D" stroke-width="4" stroke-linecap="round"/></svg>Note: Medical Underwriting Applies</div>
+        </div>
+
+        <div id="cG2" class="card c3 abs"><div class="bar"></div><div class="num">2</div><div class="title">Enrolling in Part B (Turning 65 or Retiring)</div>
+          <div id="cake" class="ico2"><svg viewBox="0 0 170 170"><rect x="22" y="86" width="126" height="64" rx="12" fill="#1E8E5A"/><rect x="34" y="62" width="102" height="30" rx="10" fill="#F5A623"/><path d="M22 112c14 10 28-10 42 0s28-10 42 0 28-10 42 0" fill="none" stroke="#fff" stroke-width="6"/>
+            <rect x="80" y="30" width="10" height="34" rx="4" fill="#14213D"/><path d="M85 8c8 10 8 16 0 20-8-4-8-10 0-20z" fill="#D93829"/></svg><div class="k">65th Birthday Window</div></div>
+          <div id="case" class="ico2"><svg viewBox="0 0 170 170"><rect x="16" y="52" width="138" height="96" rx="14" fill="#14213D"/><path d="M60 52V36a8 8 0 0 1 8-8h34a8 8 0 0 1 8 8v16" fill="none" stroke="#14213D" stroke-width="9"/><rect x="16" y="84" width="138" height="10" fill="#1E8E5A"/><rect x="72" y="78" width="26" height="22" rx="4" fill="#F5A623"/></svg><div class="k">Employer Coverage Ends</div></div>
+          <div id="dec7" class="abs">DEC 7TH<div class="x"></div></div>
+        </div>
+
+        <div id="cG3" class="card c3 abs"><div class="bar"></div><div class="num">3</div><div class="title">Replacing a Terminated Advantage Plan</div>
+          <div id="g3a">
+            <svg id="env" class="abs" viewBox="0 0 300 300"><rect x="20" y="90" width="260" height="170" rx="14" fill="#fff" stroke="#14213D" stroke-width="9"/><path id="flap" d="M24 96l126 92 126-92" fill="#F4F4F0" stroke="#14213D" stroke-width="9" stroke-linejoin="round"/></svg>
+            <div id="notice" class="abs"><div class="ln" style="top:30px;width:200px"></div><div class="ln" style="top:58px;width:270px"></div><div class="ln" style="top:190px;width:250px"></div><div class="ln" style="top:218px;width:180px"></div></div>
+            <div id="nstamp" class="abs">PLAN NON-<br/>RENEWING</div>
+            <div id="nohard" class="abs"><svg width="40" height="40" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" fill="#fff"/><path d="M11 21l6 6 12-14" fill="none" stroke="#1E8E5A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>No Dec 7th Hard Stop</div>
+          </div>
+          <div id="sep" class="abs"><div class="lab">Special Enrollment Period (Through Feb)</div><div class="track"></div><div class="fill" id="sepfill"></div>
+            <div class="dot" style="left:60px"></div><div class="dot" style="left:340px"></div><div class="dot" style="left:620px"></div>
+            <div class="mk" style="left:-10px">DEC<small>NON-RENEWS</small></div><div class="mk" style="left:270px">JAN 1</div><div class="mk" style="left:550px">FEB 28<small>SEP ENDS</small></div>
+            <div id="best" class="abs"><svg viewBox="0 0 86 86"><path d="M43 4l11.6 24.6 26.9 3.3-19.8 18.6 5.1 26.6L43 64 19.2 77.1l5.1-26.6L4.5 31.9l26.9-3.3z" fill="#F5A623"/></svg>
+              <div class="t"><b>BEST PRACTICE:</b> Enroll by Dec&nbsp;31 for Seamless Jan&nbsp;1 Coverage</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== cutaways ===== -->
+      <div id="cut7" class="cut abs"><div class="kick" style="color:#D93829">MISS DEC 7TH AND&hellip;</div>
+        <div id="cal" class="abs"></div><div id="calbar" class="abs"></div>
+        <svg id="lock" class="abs" viewBox="0 0 260 300"><path d="M62 128V86a68 68 0 0 1 136 0v42" fill="none" stroke="#14213D" stroke-width="30"/><rect x="20" y="120" width="220" height="170" rx="28" fill="#D93829"/>
+          <circle cx="130" cy="192" r="22" fill="#fff"/><rect x="121" y="200" width="18" height="46" rx="8" fill="#fff"/></svg>
+        <div id="lockcap" class="big">Locked in for <span>all of 2027</span></div></div>
+
+      <div id="cut8" class="cut abs"><div class="kick" style="color:#14213D">SWITCH OR JOIN MEDICARE ADVANTAGE</div>
+        <div id="dDec" class="dblk"><div class="d">DEC 7</div><div class="l">DEADLINE</div></div>
+        <svg id="darr" class="abs" viewBox="0 0 180 100"><path d="M10 50h140M110 14l40 36-40 36" fill="none" stroke="#14213D" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div id="dJan" class="dblk"><div class="d">JAN 1</div><div class="l">COVERAGE STARTS</div></div>
+        <div id="dstamp" class="abs">DEADLINE</div></div>
+
+      <div id="dim" class="abs"></div>
+      <div id="zoombox" class="abs"><div class="gold" id="zgold">INSIDER TIP: APPLY FOR MEDIGAP FIRST</div><div class="hl" id="zhl"></div>
+        <svg viewBox="0 0 120 120"><path d="M60 6l46 16v34c0 30-20 50-46 60C34 106 14 86 14 56V22z" fill="#14213D"/><path d="M40 60l14 14 28-30" fill="none" stroke="#F5A623" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div class="k">Original Medicare +<br/>Medigap Supplement</div></div>
+
+      <!-- ===== master board ===== -->
+      <div id="colR" class="col abs"><div class="h"><svg viewBox="0 0 48 48"><rect x="5" y="9" width="38" height="34" rx="5" fill="none" stroke="#fff" stroke-width="4"/><path d="M5 19h38M15 4v9M33 4v9" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>BY DEC 7TH</div>
+        <div class="it i1" id="mr1"><div class="glow"></div><div class="n">1</div>Standalone Part D</div>
+        <div class="it i2" id="mr2"><div class="glow"></div><div class="n">2</div>Switch Advantage</div>
+        <div class="it i3" id="mr3"><div class="glow"></div><div class="n">3</div>Advantage to Medigap + Part&nbsp;D</div></div>
+      <div id="colG" class="col abs"><div class="h"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="19" fill="none" stroke="#fff" stroke-width="4"/><path d="M24 13v12l8 5" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round"/></svg>DIFFERENT CLOCK</div>
+        <div class="it i1" id="mg1"><div class="n">1</div>Medigap-to-Medigap</div>
+        <div class="it i2" id="mg2"><div class="n">2</div>New Part B / Retiring</div>
+        <div class="it i3" id="mg3"><div class="n">3</div>Terminated Plan SEP</div></div>
+      <svg id="bclock" class="abs" viewBox="0 0 110 110"><circle cx="55" cy="55" r="48" fill="#fff" stroke="#1E8E5A" stroke-width="9"/><line id="bh1" x1="55" y1="55" x2="55" y2="24" stroke="#14213D" stroke-width="8" stroke-linecap="round"/><line id="bh2" x1="55" y1="55" x2="76" y2="55" stroke="#1E8E5A" stroke-width="8" stroke-linecap="round"/><circle cx="55" cy="55" r="6" fill="#14213D"/></svg>
+
+      <!-- ===== contact card ===== -->
+      <div id="cta" class="abs">
+        <div id="por"><img src="media/portrait.png" alt="Arric Allen" /></div>
+        <div id="plogo"><img src="media/logo.png" alt="Allen &amp; Associates Insurance Agency" /></div>
+        <div id="acard"><div class="top"></div>
+          <div class="nm">ALLEN AND ASSOCIATES</div><div class="since">Helping You Navigate Insurance Since 1994</div><div class="rule"></div>
+          <div id="sv1" class="svc">Part D</div><div id="sv2" class="svc">Medicare Advantage</div><div id="sv3" class="svc">Medigap Rate Check</div>
+          <div id="phone"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="48" fill="#F5A623"/><path d="M34 24c4-2 8 6 10 10s-2 6-4 8c2 6 8 12 14 14 2-2 4-6 8-4s12 6 10 10-6 10-12 10C42 72 26 56 26 38c0-6 4-12 8-14z" fill="#14213D"/></svg>
+            <div id="pnum">__PHONE__</div></div>
+          <div id="web"><svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="none" stroke="#F5A623" stroke-width="4"/><ellipse cx="28" cy="28" rx="11" ry="24" fill="none" stroke="#F5A623" stroke-width="4"/><path d="M4 28h48M8 16h40M8 40h40" stroke="#F5A623" stroke-width="3"/></svg>allenandassociates.agency</div>
+          <div id="bsub" class="btn"><svg viewBox="0 0 44 44"><path d="M22 6c-7 0-12 5-12 12v9l-4 6h32l-4-6v-9c0-7-5-12-12-12z" fill="#fff"/><circle cx="22" cy="37" r="4" fill="#fff"/></svg>Subscribe</div>
+          <div id="bshare" class="btn">Share This Video<svg viewBox="0 0 44 44"><path d="M12 32L32 12M16 12h16v16" fill="none" stroke="#14213D" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        </div>
+      </div>
+    </div>
+    <script>
+      const C = __CUES__;
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      /* build-time DOM: calendar strip, 12-month wheel */
+      const MON = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+      const cal = document.getElementById("cal");
+      MON.forEach((m, i) => { const d = document.createElement("div"); d.className = "m"; d.style.left = (i * 136) + "px"; d.innerHTML = "<small>2027</small>" + m; cal.appendChild(d); });
+      const wheel = document.getElementById("wheel");
+      for (let i = 0; i < 12; i++) {
+        const a0 = (i / 12) * Math.PI * 2 - Math.PI / 2 + 0.03, a1 = ((i + 1) / 12) * Math.PI * 2 - Math.PI / 2 - 0.03;
+        const R = 150, r = 80, P = (a, rr) => (160 + rr * Math.cos(a)).toFixed(1) + " " + (160 + rr * Math.sin(a)).toFixed(1);
+        const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        p.setAttribute("d", `M${P(a0, R)} A${R} ${R} 0 0 1 ${P(a1, R)} L${P(a1, r)} A${r} ${r} 0 0 0 ${P(a0, r)}Z`);
+        p.setAttribute("fill", "#D9DDDA"); p.setAttribute("class", "wseg"); wheel.appendChild(p);
+      }
+
+      /* helpers */
+      const pop = (sel, t, from = 0.6) => { tl.set(sel, { opacity: 1 }, t); tl.fromTo(sel, { scale: from }, { scale: 1, duration: .4, ease: "back.out(2.2)" }, t); };
+      const hide = (sel, t, d = .25) => tl.to(sel, { opacity: 0, duration: d }, t);
+      // a card grows out of its rail slot, and later shrinks back into it
+      const expand = (card, cx, cy, sx, sy, t) => {
+        tl.set(card, { opacity: 1 }, t);
+        tl.fromTo(card, { x: sx - cx, y: sy - cy, scale: .22 }, { x: 0, y: 0, scale: 1, duration: .5, ease: "back.out(1.15)" }, t);
+      };
+      const dock = (card, slot, cx, cy, sx, sy, t) => {
+        tl.to(card, { x: sx - cx, y: sy - cy, scale: .2, opacity: 0, duration: .32, ease: "power2.in" }, t);
+        tl.to(slot + " .full", { opacity: 1, duration: .12 }, t + .26);
+        tl.fromTo(slot, { scale: 1.12 }, { scale: 1, duration: .3, ease: "back.out(3)" }, t + .26);
+      };
+      const R2 = [1215, 596], G3 = [725, 596];
+      const RS = [[1760, 241], [1760, 391], [1760, 541]], GS = [[170, 241], [170, 391], [170, 541]];
+      const cutIn = (sel, t) => { tl.set(sel, { opacity: 1 }, t); tl.fromTo(sel, { scale: 1.06, opacity: 0 }, { scale: 1, opacity: 1, duration: .3, ease: "power2.out" }, t); };
+      const cutOut = (sel, t) => tl.to(sel, { opacity: 0, scale: .97, duration: .25, ease: "power2.in" }, t);
+
+      /* ===== Scene 6: Bucket 1 intro ===== */
+      tl.set("#hdr2", { opacity: 1 }, C.s6 + .3);
+      tl.fromTo("#hdr2", { x: 1200 }, { x: 0, duration: .55, ease: "power3.out" }, C.s6 + .3);
+      pop("#rs1", C.s6_three + .55); pop("#rs2", C.s6_three + .72); pop("#rs3", C.s6_three + .89);
+      expand("#cR1", ...R2, ...RS[0], C.s6_first);
+
+      /* ===== Scene 7: lock-in rule ===== */
+      pop("#t1", C.s7_form); pop("#t2", C.s7_pharm); pop("#t3", C.s7_copay);
+      cutIn("#cut7", C.s7_vo);
+      tl.fromTo("#cal .m", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: .25, stagger: .03, ease: "power2.out" }, C.s7_vo + .05);
+      tl.fromTo("#calbar", { scaleX: 0 }, { scaleX: 1, duration: C.s7_locked - C.s7_vo - .35, ease: "none" }, C.s7_vo + .35);
+      tl.set("#lock", { opacity: 1 }, C.s7_locked);
+      tl.fromTo("#lock", { scale: 2.4, rotation: -12 }, { scale: 1, rotation: 0, duration: .28, ease: "power4.in" }, C.s7_locked - .2);
+      tl.fromTo("#cut7", { x: 0 }, { x: 10, duration: .05, yoyo: true, repeat: 3, ease: "none" }, C.s7_locked + .08);
+      tl.fromTo("#lockcap", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .35, ease: "power3.out" }, C.s7_locked + .3);
+      cutOut("#cut7", C.s8 - .02);
+
+      /* ===== Scene 8: Advantage switch ===== */
+      dock("#cR1", "#rs1", ...R2, ...RS[0], C.s8 - .25);
+      expand("#cR2", ...R2, ...RS[1], C.s8 + .1);
+      tl.set("#ar1", { opacity: 1 }, C.s8_arrow1);
+      tl.fromTo("#ar1 > *", { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: .35, stagger: .12, ease: "power3.out" }, C.s8_arrow1);
+      tl.set("#ar2", { opacity: 1 }, C.s8_arrow2);
+      tl.fromTo("#ar2 > *", { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: .35, stagger: .12, ease: "power3.out" }, C.s8_arrow2);
+      cutIn("#cut8", C.s8_vo);
+      pop("#dJan", C.s8_vo + .1, .8); pop("#darr", C.s8_vo + .35, .8);
+      pop("#dDec", C.s8_dec - .3, .8);
+      tl.set("#dstamp", { opacity: 1 }, C.s8_dec - .1);
+      tl.fromTo("#dstamp", { scale: 2.2, rotation: -16 }, { scale: 1, rotation: -6, duration: .22, ease: "power4.in" }, C.s8_dec - .2);
+      tl.set("#r2badge", { opacity: 1 }, C.s8_dec);
+      cutOut("#cut8", C.s9 - .02);
+
+      /* ===== Scene 9: leave Advantage flowchart ===== */
+      dock("#cR2", "#rs2", ...R2, ...RS[1], C.s9 - .1);
+      expand("#cR3", ...R2, ...RS[2], C.s9 + .2);
+      const step = (sel, t) => { tl.set(sel, { opacity: 1 }, t); tl.fromTo(sel, { y: 50, scale: .9 }, { y: 0, scale: 1, duration: .4, ease: "back.out(1.8)" }, t); };
+      step("#f1", C.s9_step1); tl.to("#fa1", { opacity: 1, duration: .2 }, C.s9_step2 - .25);
+      step("#f2", C.s9_step2); tl.to("#fa2", { opacity: 1, duration: .2 }, C.s9_step3 - .25);
+      step("#f3", C.s9_step3);
+
+      /* ===== Scene 10: insider tip ===== */
+      tl.to("#dim", { opacity: 1, duration: .35 }, C.s10);
+      tl.set("#zoombox", { opacity: 1 }, C.s10 + .05);
+      tl.fromTo("#zoombox", { x: 1170 - 960, y: 470 - 580, scale: .26 }, { x: 0, y: 0, scale: 1, duration: .6, ease: "power3.inOut" }, C.s10 + .05);
+      tl.set("#zgold", { scaleX: 0 }, 0);
+      tl.to("#zgold", { scaleX: 1, duration: .35, ease: "power3.out" }, C.s10_apply - .1);
+      tl.set("#zhl", { scaleX: 0 }, 0);
+      tl.to("#zhl", { scaleX: 1, duration: .45, ease: "power2.out" }, C.s10_apply + .2);
+      tl.set("#rs3 .full", { opacity: 1 }, C.s10 + .3); tl.set("#cR3", { opacity: 0 }, C.s10 + .3);
+      tl.set("#tip", { opacity: 1 }, C.s10 + .3);
+      tl.to(["#zoombox", "#dim"], { opacity: 0, duration: .25 }, C.s10_back - .05);
+      tl.fromTo("#k1", { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: .35, ease: "power3.out" }, C.s10_back + .4);
+      tl.fromTo("#k2", { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: .35, ease: "power3.out" }, C.s10_back + .7);
+      tl.to("#ck1 path", { strokeDashoffset: 0, duration: .3, ease: "power2.out" }, C.s10_check1);
+      tl.to("#k1", { backgroundColor: "#E6F4EC", duration: .3 }, C.s10_check1);
+      tl.to("#ck2 path", { strokeDashoffset: 0, duration: .3, ease: "power2.out" }, C.s10_check2);
+      tl.to("#k2", { backgroundColor: "#E6F4EC", duration: .3 }, C.s10_check2);
+
+      /* ===== Scene 11: flip the chart ===== */
+      tl.to(["#hdr2", "#rs1", "#rs2", "#rs3", "#tip"], { rotationY: 90, transformOrigin: "100% 50%", opacity: 0, duration: .45, ease: "power2.in", stagger: .03 }, C.s11_flip);
+      tl.set("#hdr3", { opacity: 1 }, C.s11_flip + .35);
+      tl.fromTo("#hdr3", { rotationY: -90, transformOrigin: "0% 50%" }, { rotationY: 0, duration: .5, ease: "power2.out" }, C.s11_flip + .35);
+      pop("#gs1", C.s11_flip + .7); pop("#gs2", C.s11_flip + .85); pop("#gs3", C.s11_flip + 1.0);
+      expand("#cG1", ...G3, ...GS[0], C.s11_first);
+
+      /* ===== Scene 12: no fall window for Medigap ===== */
+      pop("#g1fall", C.s12_no - .5, .8);
+      tl.fromTo("#g1fall .x", { scaleX: 0 }, { scaleX: 1, duration: .25, ease: "power2.out" }, C.s12_no);
+      tl.to("#g1fall", { opacity: .45, duration: .3 }, C.s12_no + .3);
+      tl.set("#g1wheel", { opacity: 1 }, C.s12_year - .6);
+      tl.fromTo("#g1wheel", { rotation: -200, scale: .4 }, { rotation: 0, scale: 1, duration: .8, ease: "power3.out" }, C.s12_year - .6);
+      tl.to(".wseg", { fill: "#1E8E5A", duration: .1, stagger: .045 }, C.s12_year - .3);
+      tl.fromTo("#g1365", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: .35 }, C.s12_year + .3);
+      pop("#g1note", C.s12_health, .7);
+
+      /* ===== Scene 13: Part B / retiring ===== */
+      dock("#cG1", "#gs1", ...G3, ...GS[0], C.s13 - .2);
+      expand("#cG2", ...G3, ...GS[1], C.s13 + .15);
+      pop("#dec7", C.s13 + .5, .8);
+      pop("#cake", C.s13_bday - .15); pop("#case", C.s13_work - .1);
+      tl.fromTo("#dec7 .x", { scaleX: 0 }, { scaleX: 1, duration: .2 }, C.s13_not - .15);
+      tl.to("#dec7", { x: -900, rotation: -12, duration: .45, ease: "power3.in" }, C.s13_not + .1);
+
+      /* ===== Scene 14: terminated plan ===== */
+      dock("#cG2", "#gs2", ...G3, ...GS[1], C.s14 - .2);
+      expand("#cG3", ...G3, ...GS[2], C.s14 + .15);
+      pop("#env", C.s14_letter - .5, .7);
+      tl.fromTo("#flap", { scaleY: 1, transformOrigin: "50% 0%" }, { scaleY: -1, duration: .35, ease: "power2.inOut" }, C.s14_letter);
+      tl.set("#notice", { opacity: 1 }, C.s14_letter + .3);
+      tl.fromTo("#notice", { y: 60, scale: .8 }, { y: 0, scale: 1, duration: .4, ease: "back.out(1.6)" }, C.s14_letter + .3);
+      tl.set("#nstamp", { opacity: 1 }, C.s14_term + .1);
+      tl.fromTo("#nstamp", { scale: 2.3 }, { scale: 1, duration: .2, ease: "power4.in" }, C.s14_term);
+      pop("#nohard", C.s14_tech + .2, .7);
+
+      /* ===== Scene 15: SEP nuance ===== */
+      tl.to("#g3a", { opacity: 0, y: -40, duration: .35 }, C.s15 + .2);
+      tl.set("#sep", { opacity: 1 }, C.s15 + .45);
+      tl.fromTo("#sep .lab, #sep .track, #sep .dot, #sep .mk", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: .3, stagger: .03 }, C.s15 + .45);
+      tl.fromTo("#sepfill", { scaleX: 0 }, { scaleX: 1, duration: 1.2, ease: "power2.inOut" }, C.s15_special);
+      tl.set("#best", { opacity: 1 }, C.s15_still);
+      tl.fromTo("#best", { y: -140, scale: .7 }, { y: 0, scale: 1, duration: .45, ease: "bounce.out" }, C.s15_still);
+
+      /* ===== Scene 16: master board ===== */
+      tl.to(["#hdr3", "#gs1", "#gs2", "#gs3", "#cG3"], { x: -700, opacity: 0, duration: .4, ease: "power2.in", stagger: .03 }, C.s16 - .1);
+      tl.set(["#colR", "#colG"], { opacity: 1 }, C.s16 + .1);
+      tl.fromTo("#colR", { y: 1000 }, { y: 0, duration: .5, ease: "power3.out" }, C.s16 + .1);
+      tl.fromTo("#colG", { y: 1000 }, { y: 0, duration: .5, ease: "power3.out" }, C.s16 + .22);
+      ["#mr1", "#mg1", "#mr2", "#mg2", "#mr3", "#mg3"].forEach((s, i) => {
+        tl.set(s, { opacity: 1 }, C.s16 + .5 + i * .14);
+        tl.fromTo(s, { y: -30, scale: .9 }, { y: 0, scale: 1, duration: .25, ease: "back.out(2)" }, C.s16 + .5 + i * .14);
+      });
+      tl.to("#colR .glow", { opacity: 1, duration: .18, yoyo: true, repeat: 3 }, C.s16_partd);
+      tl.to("#colR .glow", { opacity: .9, duration: .2 }, C.s16_partd + .8);
+      tl.set("#bclock", { opacity: 1 }, C.s16_clock - .1);
+      tl.fromTo("#bclock", { scale: .4 }, { scale: 1, duration: .35, ease: "back.out(2)" }, C.s16_clock - .1);
+      tl.fromTo("#bh1", { rotation: 0, svgOrigin: "55 55" }, { rotation: 360, svgOrigin: "55 55", duration: .9, ease: "power2.out" }, C.s16_clock);
+
+      /* ===== Scene 17-18: contact card ===== */
+      tl.to(["#colR", "#colG", "#bclock"], { x: 400, opacity: 0, filter: "blur(14px)", duration: .45, ease: "power2.in" }, C.s17 - .05);
+      tl.set("#cta", { opacity: 1 }, C.s17 + .05);
+      tl.fromTo("#cta", { opacity: 0 }, { opacity: 1, duration: .3 }, C.s17 + .05);
+      tl.fromTo("#por", { scale: .7, opacity: 0 }, { scale: 1, opacity: 1, duration: .55, ease: "back.out(1.6)" }, C.s17 + .1);
+      tl.fromTo("#acard", { x: 700, opacity: 0 }, { x: 0, opacity: 1, duration: .6, ease: "power3.out" }, C.s17 + .2);
+      tl.fromTo("#plogo", { y: 60, opacity: 0 }, { y: 0, opacity: 1, duration: .45, ease: "power3.out" }, C.s17 + .45);
+      pop("#sv1", C.s17_partd, .6); pop("#sv2", C.s17_ma, .6); pop("#sv3", C.s17_gap, .6);
+      tl.set("#phone svg", { opacity: 1 }, C.s17_call);
+      tl.fromTo("#phone svg", { scale: .4, rotation: -30 }, { scale: 1, rotation: 0, duration: .4, ease: "back.out(2)" }, C.s17_call);
+      document.querySelectorAll("#pnum span").forEach((s, i) => tl.set(s, { opacity: 1 }, C.s17_call + .4 + i * .1));
+      tl.set("#web", { opacity: 1 }, C.s17_visit);
+      tl.fromTo("#web", { scale: .85 }, { scale: 1, duration: .35, ease: "back.out(2)" }, C.s17_visit);
+      tl.to("#web", { backgroundColor: "#F5A623", color: "#14213D", borderColor: "#F5A623", boxShadow: "0 0 50px rgba(245,166,35,.6)", duration: .3 }, C.s17_visit + .35);
+      tl.to("#web svg *", { stroke: "#14213D", duration: .3 }, C.s17_visit + .35);
+      pop("#bsub", C.s18_sub - .1, .6);
+      tl.to("#bsub", { scale: 1.06, duration: .35, yoyo: true, repeat: 3, ease: "sine.inOut" }, C.s18_sub + .4);
+      pop("#bshare", C.s18_share - .1, .6);
+      tl.to("#cta", { opacity: 1, duration: .1 }, C.end - .1);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
